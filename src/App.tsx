@@ -1,17 +1,22 @@
 
 import { Provider } from 'react-redux';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/styles'
-
+import CssBaseline from '@material-ui/core/CssBaseline';
 import {
   colorBrandPrimary,
   colorBrandSecondary
-} from 'style/color'
+} from 'styles/color'
 
-import store from '../store';
+import './styles/App.scss'
+import store from './store';
+// import Splash from 'components/splash/Splash';
+// import Welcome from 'components/welcome/Welcome';
+// import SignUp from 'components/signup/SignUp';
+import SignUpSuccess from 'components/signup/SignUpSuccess';
 
 
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontFamily: '"Mulish", sans-serif',
     button: {
@@ -37,10 +42,11 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
+        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+        <CssBaseline />
         <StylesProvider injectFirst>
 
-          <div>hello</div>
-          
+          <SignUpSuccess />
         </StylesProvider>
       </ThemeProvider>
     </Provider>
