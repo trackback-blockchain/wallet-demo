@@ -74,9 +74,11 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
     label: string;
     type?: string | undefined;
+    value?: string;
+    onChange?: (event: any) => void
 }
 
-export default function CustomizedInputs({ label, type = "input" }: Props) {
+export default function CustomizedInputs({ label, type = "input", value, onChange }: Props) {
     const classes = useStyles();
 
     return (
@@ -95,7 +97,7 @@ export default function CustomizedInputs({ label, type = "input" }: Props) {
             >
                 {label}
             </InputLabel>
-            <BootstrapInput placeholder={label} id="bootstrap-input" type={type} />
+            <BootstrapInput placeholder={label} id={label} type={type} value={value} onChange={onChange} />
         </FormControl>
     )
 }

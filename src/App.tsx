@@ -11,9 +11,15 @@ import {
 import './styles/App.scss'
 import store from './store';
 // import Splash from 'components/splash/Splash';
-// import Welcome from 'components/welcome/Welcome';
-// import SignUp from 'components/signup/SignUp';
+import Welcome from 'components/welcome/Welcome';
+import SignUp from 'components/signup/SignUp';
+import Login from 'components/login/Login';
 import SignUpSuccess from 'components/signup/SignUpSuccess';
+
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// import { history } from './_helpers';
+import PrivateRoute from 'components/PrivateRoute';
+import { ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_WELCOME } from './constants';
 
 
 const theme = createTheme({
@@ -46,7 +52,15 @@ function App() {
         <CssBaseline />
         <StylesProvider injectFirst>
 
-          <SignUpSuccess />
+          <BrowserRouter>
+            <Switch>
+              <Route exact path={ROUTE_LOGIN} component={Login} />
+              <Route exact path={ROUTE_REGISTER} component={SignUp} />
+              <Route exact path={ROUTE_WELCOME} component={Welcome} />
+              <PrivateRoute exact path="/" component={SignUpSuccess} />
+
+            </Switch>
+          </BrowserRouter>
         </StylesProvider>
       </ThemeProvider>
     </Provider>

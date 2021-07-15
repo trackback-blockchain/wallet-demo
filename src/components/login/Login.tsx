@@ -4,17 +4,21 @@ import { css } from '@emotion/react';
 import Button from 'components/inputs/Button';
 import { default as MatrialBtn } from '@material-ui/core/Button';
 
-import TextField from '../inputs/TextField'
+import TextField from '../inputs/TextField';
 
-import './signup.scss'
+import './login.scss';
 import { makeStyles } from '@material-ui/core';
 import { colorBrandPrimary } from 'styles/color';
+import { useHistory } from "react-router-dom";
+import { ROUTE_REGISTER, ROUTE_ROOT } from '../../constants';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
-import { ROUTE_LOGIN, ROUTE_ROOT } from '../../constants';
-import { useDispatch } from 'react-redux';
-import { updateUserData } from 'reducers/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from 'reducers/user';
+
+// @ts-ignore
+import CryptoJS from 'crypto-js';
 import { changeLoggedIn } from 'reducers/app';
+
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -32,22 +36,20 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-function SignUp() {
+function Login() {
     const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
 
-    const [name, setName] = useState('');
+    const user = useSelector(getUser);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
 
-    function login() {
-        history.push(ROUTE_LOGIN);
+    function regiester() {
+        history.push(ROUTE_REGISTER);
     }
 
-    const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    };
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
     };
@@ -55,53 +57,50 @@ function SignUp() {
         setPassword(event.target.value);
     };
 
+    const handleLogin = async () => {
 
-    const handleRegister = async () => {
         if (email.length === 0 || password.length === 0) {
             return;
         }
 
-        await dispatch(updateUserData({ name, email, password }));
-        await dispatch(changeLoggedIn(true));
-        
-        history.push(ROUTE_ROOT);
+        const hash = CryptoJS.SHA256(password);
+
+        if (user.email === email && hash.toString(CryptoJS.enc.Base64) === user.password) {
+            await dispatch(changeLoggedIn(true));
+            history.push(ROUTE_ROOT);
+        }
+
     };
 
-
-
     return (
-        <div className="container-signup">
+        <div className="container-login">
 
             <div className="heading">
-                <h4 >Register</h4>
+                <h4 >Login</h4>
             </div>
 
             <div className="signup">
-                <h4 className="color-black1" css={css`text-align:left; margin-bottom:10px`}>First things first!</h4>
-
-                <div css={css`border: 2px solid #153144;width: 48px;height: 0px; margin-top:0 !important;`}></div>
-
 
                 <div css={css` > * {
                     margin-top: 15px;
                 }
                 `}>
 
-                    <TextField label="Name" value={name} onChange={handleName} />
 
                     <TextField label="Email address" value={email} onChange={handleEmail} />
 
                     <TextField label="Password" type="password" value={password} onChange={handlePassword} />
 
+
                 </div>
 
 
-                <Button gold className="button-continue" onClick={handleRegister}>
-                    Register
+                <Button gold className="button-continue" onClick={handleLogin} >
+                    Login
                 </Button>
 
-                <MatrialBtn  className={classes.link} onClick={login}>
-                    Sign in instead
+                <MatrialBtn className={classes.link} onClick={regiester}>
+                    Register
                 </MatrialBtn>
 
             </div>
@@ -113,4 +112,4 @@ function SignUp() {
 }
 
 
-export default SignUp
+export default Login

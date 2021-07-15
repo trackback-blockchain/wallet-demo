@@ -13,7 +13,7 @@ import { ReactComponent as Ellipse2 } from '../resources/Ellipse_182.svg';
 function SignUpSuccess() {
 
     return (
-        <div className="container">
+        <div className="container-sg-success">
 
 
             <div className="card">
