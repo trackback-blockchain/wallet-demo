@@ -28,7 +28,7 @@ function Welcome() {
             </h6>
 
 
-            <Button gold className="btn_regiester" onClick={regiester}>
+            <Button gold className="btn_register" onClick={regiester}>
                 Register
             </Button>
 

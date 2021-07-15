@@ -97,7 +97,7 @@ export default function CustomizedInputs({ label, type = "input", value, onChang
             >
                 {label}
             </InputLabel>
-            <BootstrapInput placeholder={label} id={label} type={type} value={value} onChange={onChange} />
+            <BootstrapInput placeholder={label} id={label.replaceAll(' ','')} type={type} value={value} onChange={onChange} />
         </FormControl>
     )
 }

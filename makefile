@@ -11,4 +11,4 @@ clean:
 	docker-compose rm -f
 
 e2e:
-	npm run cy:open
+	npm run cy:run

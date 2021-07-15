@@ -23,21 +23,26 @@ function SignUpSuccess() {
                         top: 18px;
                         position: absolute;
                     `} />
+                   
 
-                    <Ellipse2 css={css`  
+                        <Ellipse2 css={css`  
                         position: absolute;
-                        right: 168px;
+                        right: calc(50% - 50px);
+
                     `} />
-               
-       <Check css={css`  
+
+                        <Check css={css`  
                         position: absolute;
-                        right: 176px;
+                        right: calc(50% - 43px);
                         top: 10px;
                     `} />
+
+                    
+
                     <Ellipse css={css` 
                     `} />
 
-             
+
                 </div>
 
                 <h5>Welcome to TANZ</h5>

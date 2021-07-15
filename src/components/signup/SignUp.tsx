@@ -100,7 +100,7 @@ function SignUp() {
                     Register
                 </Button>
 
-                <MatrialBtn  className={classes.link} onClick={login}>
+                <MatrialBtn  className={`${classes.link} button-login`} onClick={login}>
                     Sign in instead
                 </MatrialBtn>
 

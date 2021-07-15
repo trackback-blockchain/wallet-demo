@@ -10,9 +10,6 @@ type PrivateRouteProps = {
 
 function PrivateRoute({ component: Component, ...rest }: PrivateRouteProps) {
     const isUserRegistered = useSelector(isLoggedIn);
-
-    console.log("isUserRegistered",isUserRegistered)
-
     
     return (
         <Route {...rest} render={props => {

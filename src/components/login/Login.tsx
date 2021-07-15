@@ -99,7 +99,7 @@ function Login() {
                     Login
                 </Button>
 
-                <MatrialBtn className={classes.link} onClick={regiester}>
+                <MatrialBtn className={`${classes.link} button-register`} onClick={regiester}>
                     Register
                 </MatrialBtn>
 
