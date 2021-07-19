@@ -1,6 +1,7 @@
 
-import './splash.scss';
 import { ReactComponent as Logo } from '../logo.svg';
+
+import './splash.scss';
 
 
 function Splash() {

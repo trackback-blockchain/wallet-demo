@@ -1,10 +1,12 @@
 
-import './welcome.scss';
-import { ReactComponent as Logo } from '../logo.svg';
-import Button from 'components/inputs/Button';
 import { useHistory } from "react-router-dom";
-import { ROUTE_LOGIN, ROUTE_REGISTER } from '../../constants';
 
+import Button from 'components/inputs/Button';
+
+import { ROUTE_LOGIN, ROUTE_REGISTER } from '../../constants';
+import { ReactComponent as Logo } from '../logo.svg';
+
+import './welcome.scss';
 
 function Welcome() {
     const history = useHistory();

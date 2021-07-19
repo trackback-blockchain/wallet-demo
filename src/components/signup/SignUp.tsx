@@ -1,20 +1,23 @@
 /** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
-
-import Button from 'components/inputs/Button';
-import { default as MatrialBtn } from '@material-ui/core/Button';
-
-import TextField from '../inputs/TextField'
-
-import './signup.scss'
-import { makeStyles } from '@material-ui/core';
-import { colorBrandPrimary } from 'styles/color';
 import { useState } from 'react';
+
 import { useHistory } from 'react-router';
-import { ROUTE_LOGIN, ROUTE_ROOT } from '../../constants';
 import { useDispatch } from 'react-redux';
+
 import { updateUserData } from 'reducers/user';
 import { changeLoggedIn } from 'reducers/app';
+
+import { makeStyles } from '@material-ui/core';
+import { default as MatrialBtn } from '@material-ui/core/Button';
+import Button from 'components/inputs/Button';
+
+import TextField from '../inputs/TextField'
+import { ROUTE_LOGIN, ROUTE_ROOT } from '../../constants';
+
+import { colorBrandPrimary } from 'styles/color';
+
+import { css } from '@emotion/react';
+import './signup.scss'
 
 const useStyles = makeStyles(() => ({
     root: {

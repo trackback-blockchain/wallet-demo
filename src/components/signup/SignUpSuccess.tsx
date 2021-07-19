@@ -2,12 +2,13 @@
 import { css } from '@emotion/react'
 
 import Button from 'components/inputs/Button';
-import './signUpSuccess.scss';
+
 import { ReactComponent as Check } from '../resources/check.svg';
 import { ReactComponent as Layer } from '../resources/Layer_2.svg';
 import { ReactComponent as Ellipse } from '../resources/Ellipse_181.svg';
 import { ReactComponent as Ellipse2 } from '../resources/Ellipse_182.svg';
 
+import './signUpSuccess.scss';
 
 
 function SignUpSuccess() {
