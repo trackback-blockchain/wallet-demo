@@ -1,13 +1,9 @@
 describe('Trackback Wallet', () => {
 
-    describe('When page is initially opened', function () {
+    describe('Tests for home page', function () {
 
-        beforeEach(function () {
+        it('home page should contain all elemnts', () => {
             cy.visit('/')
-        })
-
-        it('page should contain all elemnts', () => {
-
             cy.get('.heading').contains('Welcome to the TANZ identity wallet')
             cy.get('.subtitle').contains('Save time, create your identity and share it with other TANZ members')
             cy.get('.btn_register').should('exist');
@@ -16,13 +12,13 @@ describe('Trackback Wallet', () => {
         });
 
         it('check register button click', () => {
-
+            cy.visit('/')
             cy.get('.btn_register').click();
             cy.url().should('include', '/register')
         });
 
         it('check login button click', () => {
-
+            cy.visit('/')
             cy.get('.btn_login').click();
             cy.url().should('include', '/login')
         });
