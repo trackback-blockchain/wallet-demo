@@ -1,4 +1,5 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+
 import appReducer from '../reducers/app';
 import userReducer from '../reducers/user';
 

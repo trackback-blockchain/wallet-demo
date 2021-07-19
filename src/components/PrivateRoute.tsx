@@ -1,5 +1,7 @@
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+
 import { useSelector } from 'react-redux';
+
 import { isLoggedIn } from 'reducers/app';
 
 type PrivateRouteProps = {

@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { App } from 'types';
-import { AppState } from '../store';
 // @ts-ignore
 import { reactLocalStorage } from 'reactjs-localstorage';
+
+import { AppState } from '../store';
 
 const IDENTYFIER = "__app"
 
