@@ -1,26 +1,28 @@
 
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
+
+import { keyring } from '@polkadot/ui-keyring';
+
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline';
+
+import store from './store';
+import { ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_WELCOME } from './constants';
+
+import Welcome from 'components/welcome/Welcome';
+import SignUp from 'components/signup/SignUp';
+import Login from 'components/login/Login';
+import SignUpSuccess from 'components/signup/SignUpSuccess';
+import PrivateRoute from 'components/PrivateRoute';
+
 import {
   colorBrandPrimary,
   colorBrandSecondary
 } from 'styles/color'
 
-import './styles/App.scss'
-import store from './store';
-// import Splash from 'components/splash/Splash';
-import Welcome from 'components/welcome/Welcome';
-import SignUp from 'components/signup/SignUp';
-import Login from 'components/login/Login';
-import SignUpSuccess from 'components/signup/SignUpSuccess';
-
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-// import { history } from './_helpers';
-import PrivateRoute from 'components/PrivateRoute';
-import { ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_WELCOME } from './constants';
-
+import './styles/App.scss';
 
 const theme = createTheme({
   typography: {
@@ -43,6 +45,16 @@ const theme = createTheme({
   },
 })
 
+function isKeyringLoaded () {
+  try {
+    return !!keyring.keyring;
+  } catch {
+    return false;
+  }
+}
+
+
+isKeyringLoaded() || keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
 
 function App() {
   return (
