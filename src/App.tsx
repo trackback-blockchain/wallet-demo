@@ -23,6 +23,8 @@ import {
 } from 'styles/color'
 
 import './styles/App.scss';
+import Home from 'components/home/Home';
+import QRCode from 'components/qucode/QRCode';
 
 const theme = createTheme({
   typography: {
@@ -69,6 +71,9 @@ function App() {
               <Route exact path={ROUTE_LOGIN} component={Login} />
               <Route exact path={ROUTE_REGISTER} component={SignUp} />
               <Route exact path={ROUTE_WELCOME} component={Welcome} />
+              <Route exact path="/home" component={Home} />
+              <Route exact path="/qr" component={QRCode} />
+
               <PrivateRoute exact path="/" component={SignUpSuccess} />
 
             </Switch>

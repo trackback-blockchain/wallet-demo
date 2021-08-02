@@ -8,3 +8,14 @@ export type User = {
     email: string;
     password: string
 }
+
+
+export type Document = {
+    id: string;
+    title: string;
+    subTitle: string;
+}
+
+export type DocumentsProps = {
+    documents: Array<Document>;
+}

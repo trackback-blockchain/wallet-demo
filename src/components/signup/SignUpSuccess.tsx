@@ -3,10 +3,10 @@ import { css } from '@emotion/react'
 
 import Button from 'components/inputs/Button';
 
-import { ReactComponent as Check } from '../resources/check.svg';
+// import { ReactComponent as Check } from '../resources/check.svg';
 import { ReactComponent as Layer } from '../resources/Layer_2.svg';
 import { ReactComponent as Ellipse } from '../resources/Ellipse_181.svg';
-import { ReactComponent as Ellipse2 } from '../resources/Ellipse_182.svg';
+// import { ReactComponent as Ellipse2 } from '../resources/Ellipse_182.svg';
 
 import './signUpSuccess.scss';
 
@@ -26,17 +26,17 @@ function SignUpSuccess() {
                     `} />
                    
 
-                        <Ellipse2 css={css`  
+                        {/* <Ellipse2 css={css`  
                         position: absolute;
                         right: calc(50% - 50px);
 
-                    `} />
-
+                    `} /> */}
+{/* 
                         <Check css={css`  
                         position: absolute;
                         right: calc(50% - 43px);
                         top: 10px;
-                    `} />
+                    `} /> */}
 
                     
 
@@ -46,12 +46,12 @@ function SignUpSuccess() {
 
                 </div>
 
-                <h5>Welcome to TANZ</h5>
+                <h5>You’re in!</h5>
                 <h6 className="sub">
-                    Thanks for signing up! Start filling out your profile information by verifying your license.
+                Thanks for signing up! Start filling out your profile information by verifying your identity documents.
                 </h6>
 
-                <Button gold className="button-getstarted" >
+                <Button  className="button-getstarted" >
                     Get Started
                 </Button>
             </div>
