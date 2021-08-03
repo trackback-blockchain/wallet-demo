@@ -1,0 +1,60 @@
+@import "../../styles/colors.scss";
+
+.container-sharing-access {
+    width: 100vw;
+    height: 100vh;
+    min-height: 732px;
+    background-color: $colorBrandPrimary;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    font-family: Mulish;
+    font-style: normal;
+
+    .logo-container {
+        margin-top: 180px;
+        display: flex;
+        padding: 25px;
+        width: 100%;
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        gap: 20px;
+
+        .dots {
+            width: 20px;
+            height: 4px;
+            background-image: url("../resources/dots.png");
+        }
+        .logo {
+            width: 77px;
+            height: 77px;
+            // background-color: aquamarine;
+        }
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 125%;
+        text-align: center;
+
+        margin-top: 60px;
+        color: $colorCream;
+    }
+
+    .sub-title {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 150%;
+        text-align: center;
+        letter-spacing: 0.01em;
+        color: $colorGery6;
+
+        padding: 20px
+    }
+}

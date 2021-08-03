@@ -1,6 +1,10 @@
+
 export type App = {
     init: boolean,
-    loggedIn: boolean
+    loggedIn: boolean,
+    socket:string,
+    types:any,
+
 }
 
 export type User = {
