@@ -3,6 +3,7 @@ describe('Trackback Wallet', () => {
     describe('Tests for home page', function () {
 
         it('home page should contain all elemnts', () => {
+            cy.wait(10000);
             cy.visit('/')
             cy.get('.heading').contains('Welcome to the TANZ wallet.')
 
