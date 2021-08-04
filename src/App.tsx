@@ -1,15 +1,12 @@
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
-
-import { keyring } from '@polkadot/ui-keyring';
 
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import { StylesProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import store from './store';
-import { ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_WELCOME } from './constants';
+
+import { ROUTE_HOME, ROUTE_LOGIN, ROUTE_QR_CODE, ROUTE_REGISTER, ROUTE_SHARE, ROUTE_SHARING, ROUTE_SUCCESS, ROUTE_VC, ROUTE_WELCOME } from './constants';
 
 import Welcome from 'components/welcome/Welcome';
 import SignUp from 'components/signup/SignUp';
@@ -23,6 +20,14 @@ import {
 } from 'styles/color'
 
 import './styles/App.scss';
+import Home from 'components/home/Home';
+import QRCode from 'components/qucode/QRCode';
+import DocumentDetails from 'components/documentDetails/DocumentDetails';
+import ShareDetails from 'components/shareDetails/ShareDetails';
+import SharingAccess from 'components/shareDetails/SharingAccess';
+
+import { SubstrateContextProvider } from 'components/substrateContext/SubstrateContext'
+
 
 const theme = createTheme({
   typography: {
@@ -45,37 +50,39 @@ const theme = createTheme({
   },
 })
 
-function isKeyringLoaded () {
-  try {
-    return !!keyring.keyring;
-  } catch {
-    return false;
-  }
-}
 
-
-isKeyringLoaded() || keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
 
 function App() {
-  return (
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <StylesProvider injectFirst>
 
+  return (
+
+    <ThemeProvider theme={theme}>
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      <CssBaseline />
+      <StylesProvider injectFirst>
+        <SubstrateContextProvider>
           <BrowserRouter>
             <Switch>
+              
               <Route exact path={ROUTE_LOGIN} component={Login} />
               <Route exact path={ROUTE_REGISTER} component={SignUp} />
               <Route exact path={ROUTE_WELCOME} component={Welcome} />
-              <PrivateRoute exact path="/" component={SignUpSuccess} />
+
+              <PrivateRoute exact path={ROUTE_SUCCESS} component={SignUpSuccess} />
+              <PrivateRoute exact path={ROUTE_HOME} component={Home} />
+              <PrivateRoute exact path={ROUTE_QR_CODE} component={QRCode} />
+              <PrivateRoute exact path={ROUTE_VC} component={DocumentDetails} />
+              <PrivateRoute exact path={ROUTE_SHARE} component={ShareDetails} />
+              <PrivateRoute exact path={ROUTE_SHARING} component={SharingAccess} />
+
+              <PrivateRoute exact path="/" component={Home} />
 
             </Switch>
           </BrowserRouter>
-        </StylesProvider>
-      </ThemeProvider>
-    </Provider>
+        </SubstrateContextProvider>
+      </StylesProvider>
+    </ThemeProvider>
+
   );
 }
 

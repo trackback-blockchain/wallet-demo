@@ -31,8 +31,9 @@ export const userSlice = createSlice({
     reducers: {
 
         updateUserData: (state, action) => {
-            const { name, email = "", password = "" } = action.payload;
+            const { name, lastName = "", email = "", password = "" } = action.payload;
             state.name = name;
+            state.lastName = lastName;
             state.email = email;
 
             const hash = CryptoJS.SHA256(password);

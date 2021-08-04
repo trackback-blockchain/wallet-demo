@@ -1,0 +1,14 @@
+{
+    "didModule": {
+        "dIDDocument": {
+            "description": "Get DID Documnet",
+            "params": [
+                {
+                    "name": "didDocumentHash",
+                    "type": "Vec<u8>"
+                }
+            ],
+            "type": "DID"
+        }
+    }
+}

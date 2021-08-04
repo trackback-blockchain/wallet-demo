@@ -7,49 +7,33 @@ import { useDispatch } from 'react-redux';
 import { updateUserData } from 'reducers/user';
 import { changeLoggedIn } from 'reducers/app';
 
-import { makeStyles } from '@material-ui/core';
-import { default as MatrialBtn } from '@material-ui/core/Button';
+// import { makeStyles } from '@material-ui/core';
+// import { default as MatrialBtn } from '@material-ui/core/Button';
 import Button from 'components/inputs/Button';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import TextField from '../inputs/TextField'
-import { ROUTE_LOGIN, ROUTE_ROOT } from '../../constants';
-
-import { colorBrandPrimary } from 'styles/color';
+import { ROUTE_SUCCESS } from '../../constants';
 
 import { css } from '@emotion/react';
 import './signup.scss'
 
-const useStyles = makeStyles(() => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-
-    },
-    link: {
-        letterSpacing: '0.05em',
-        textDecorationLine: 'underline',
-        textTransform: 'capitalize',
-        width: '100%',
-        color: colorBrandPrimary,
-    }
-}));
-
-
 function SignUp() {
-    const classes = useStyles();
+   
     const history = useHistory();
     const dispatch = useDispatch();
 
     const [name, setName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
 
-    function login() {
-        history.push(ROUTE_LOGIN);
-    }
-
     const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
+    };
+    const handleLastName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLastName(event.target.value);
     };
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -64,33 +48,42 @@ function SignUp() {
             return;
         }
 
-        await dispatch(updateUserData({ name, email, password }));
+        await dispatch(updateUserData({ name, lastName, email, password }));
         await dispatch(changeLoggedIn(true));
-        
-        history.push(ROUTE_ROOT);
+
+        history.push(ROUTE_SUCCESS);
     };
+
+    const goback = ()=>{
+        history.goBack();
+    }
 
 
 
     return (
         <div className="container-signup">
 
-            <div className="heading">
-                <h4 >Register</h4>
+            <div className="banner">
+
+                <IconButton aria-label="back" style={{ marginTop: 25, }} onClick={goback}>
+                    <ArrowBackIcon fontSize="large" style={{ color: '#DEC058' }} />
+                </IconButton>
+
+                <div className="title">Sign up</div>
+
             </div>
 
             <div className="signup">
-                <h4 className="color-black1" css={css`text-align:left; margin-bottom:10px`}>First things first!</h4>
-
-                <div css={css`border: 2px solid #153144;width: 48px;height: 0px; margin-top:0 !important;`}></div>
-
 
                 <div css={css` > * {
                     margin-top: 15px;
                 }
                 `}>
+                    <div className="name_holder">
+                        <TextField label="First Name" value={name} onChange={handleName} />
+                        <TextField label="Last Name" value={lastName} onChange={handleLastName} />
+                    </div>
 
-                    <TextField label="Name" value={name} onChange={handleName} />
 
                     <TextField label="Email address" value={email} onChange={handleEmail} />
 
@@ -99,13 +92,9 @@ function SignUp() {
                 </div>
 
 
-                <Button gold className="button-continue" onClick={handleRegister}>
-                    Register
+                <Button className="button-continue" onClick={handleRegister}>
+                    Continue
                 </Button>
-
-                <MatrialBtn  className={`${classes.link} button-login`} onClick={login}>
-                    Sign in instead
-                </MatrialBtn>
 
             </div>
 

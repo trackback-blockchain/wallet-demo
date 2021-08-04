@@ -17,15 +17,20 @@ const BootstrapInput = withStyles((theme) => ({
         'label + &': {
             marginTop: theme.spacing(3),
         },
-
+        '& .MuiInputBase-Input': {
+            color: '#000',
+          },
     },
+
     input: {
+        color:'#000',
+        caretColor: '#000',
         borderRadius: 4,
         position: 'relative',
         backgroundColor: theme.palette.common.white,
         border: '1px solid #B1C0CB',
         fontSize: 16,
-        lineHeight: 24,
+        // lineHeight: 24,
         width: '100%',
         padding: '16px',
         transition: theme.transitions.create(['border-color', 'box-shadow']),
@@ -87,7 +92,8 @@ export default function CustomizedInputs({ label, type = "input", value, onChang
 
                 htmlFor="bootstrap-input"
                 css={css`
-            color:#43526D;      
+            color:#2A3612;      
+            // font-family: Wigrum;
             font-style: normal;
             font-weight: normal;
             font-size: 14px;
