@@ -6,7 +6,7 @@ import { StylesProvider } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 
-import { ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_WELCOME } from './constants';
+import { ROUTE_HOME, ROUTE_LOGIN, ROUTE_QR_CODE, ROUTE_REGISTER, ROUTE_SHARE, ROUTE_SHARING, ROUTE_SUCCESS, ROUTE_VC, ROUTE_WELCOME } from './constants';
 
 import Welcome from 'components/welcome/Welcome';
 import SignUp from 'components/signup/SignUp';
@@ -63,16 +63,19 @@ function App() {
         <SubstrateContextProvider>
           <BrowserRouter>
             <Switch>
+              
               <Route exact path={ROUTE_LOGIN} component={Login} />
               <Route exact path={ROUTE_REGISTER} component={SignUp} />
               <Route exact path={ROUTE_WELCOME} component={Welcome} />
-              <PrivateRoute exact path="/home" component={Home} />
-              <PrivateRoute exact path="/qr" component={QRCode} />
-              <PrivateRoute exact path="/document" component={DocumentDetails} />
-              <PrivateRoute exact path="/share" component={ShareDetails} />
-              <PrivateRoute exact path="/sharing" component={SharingAccess} />
 
-              <PrivateRoute exact path="/" component={SignUpSuccess} />
+              <PrivateRoute exact path={ROUTE_SUCCESS} component={SignUpSuccess} />
+              <PrivateRoute exact path={ROUTE_HOME} component={Home} />
+              <PrivateRoute exact path={ROUTE_QR_CODE} component={QRCode} />
+              <PrivateRoute exact path={ROUTE_VC} component={DocumentDetails} />
+              <PrivateRoute exact path={ROUTE_SHARE} component={ShareDetails} />
+              <PrivateRoute exact path={ROUTE_SHARING} component={SharingAccess} />
+
+              <PrivateRoute exact path="/" component={Home} />
 
             </Switch>
           </BrowserRouter>

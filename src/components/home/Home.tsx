@@ -1,3 +1,7 @@
+import { useSelector } from 'react-redux';
+
+import { getUser } from 'reducers/user';
+
 import Documents from 'components/pageComponents/Documents';
 import Tabs from 'components/pageComponents/Tabs';
 
@@ -7,6 +11,7 @@ import './home.scss';
 
 function Home() {
 
+    const user = useSelector(getUser);
 
     return (
         <div className="container-home" >
@@ -17,7 +22,7 @@ function Home() {
                     <div className="logo">
                         <Logo width="56" height="56" />
                     </div>
-                    <div className="title">Hi, Don.</div>
+                    <div className="title">Hi, {user.name}.</div>
 
                 </div>
 

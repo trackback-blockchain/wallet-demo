@@ -9,6 +9,7 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import { ReactComponent as Cog } from '../resources/cog.svg';
 import { ReactComponent as QrCode } from '../resources/qrcode.svg';
 import { colorGold } from 'styles/color';
+import { ROUTE_QR_CODE, ROUTE_HOME } from "../../constants/index";
 
 
 const useStyles = makeStyles({
@@ -35,12 +36,12 @@ function Tabs(props: TabsProps) {
     const handleChange = (__event: any, newValue: number) => {
         switch (newValue) {
             case 0:
-                history.push("/home");
+                history.push(ROUTE_HOME);
                 break;
             case 1:
-                history.push("/qr");
+                history.push(ROUTE_QR_CODE);
                 break;
-        
+
             default:
                 break;
         }

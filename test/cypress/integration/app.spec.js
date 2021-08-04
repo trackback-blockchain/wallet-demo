@@ -4,8 +4,8 @@ describe('Trackback Wallet', () => {
 
         it('home page should contain all elemnts', () => {
             cy.visit('/')
-            cy.get('.heading').contains('Welcome to the TANZ identity wallet')
-            cy.get('.subtitle').contains('Save time, create your identity and share it with other TANZ members')
+            cy.get('.heading').contains('Welcome to the TANZ wallet.')
+
             cy.get('.btn_register').should('exist');
             cy.get('.btn_login').should('exist');
 
@@ -38,7 +38,6 @@ describe('Trackback Wallet', () => {
             cy.get('#Password').should('exist');
 
             cy.get('.button-continue').contains('Login');
-            cy.get('.button-register').contains('Register');
         });
 
         it('page should login user', () => {
@@ -59,46 +58,40 @@ describe('Trackback Wallet', () => {
 
         it('register page contains all elements', () => {
 
-            cy.get('.color-black1').contains('First things first!')
-            cy.get('#Name').should('exist');
+            cy.get('#FirstName').should('exist');
+            cy.get('#LastName').should('exist');
             cy.get('#Emailaddress').should('exist');
             cy.get('#Password').should('exist');
 
-            cy.get('.button-continue').contains('Register');
-            cy.get('.button-login').contains('Sign in instead');
+            cy.get('.button-continue').contains('Continue');
 
         });
 
-        it('check login button click', () => {
-
-            cy.get('.button-login').click();
-            cy.url().should('include', '/login');
-            cy.visit('/register')
-        });
-
-
+   
         it('register page register user', () => {
 
-            cy.get('#Name').type('First Last');
+            cy.get('#FirstName').type('First');
+            cy.get('#LastName').type('Last');
             cy.get('#Emailaddress').type('test@example.org');
             cy.get('#Password').type('123');
 
             cy.get('.button-continue').click();
-            cy.url().should('include', '/')
+            cy.url().should('include', '/success')
 
         });
 
         it('sign up success page tests', () => {
             cy.visit('/register')
-            cy.get('#Name').type('First Last');
+            cy.get('#FirstName').type('First');
+            cy.get('#LastName').type('Last');
             cy.get('#Emailaddress').type('test@example.org');
             cy.get('#Password').type('123');
 
             cy.get('.button-continue').click();
-            cy.url().should('include', '/')
+            cy.url().should('include', '/success')
 
-            cy.get('h5').contains('Welcome to TANZ');
-            cy.get('.sub').contains('Thanks for signing up! Start filling out your profile information by verifying your license.');
+            cy.get('h5').contains('You’re in!');
+            cy.get('.sub').contains('Thanks for signing up! Start filling out your profile information by verifying your identity documents.');
             cy.get('.button-getstarted').contains('Get Started');
 
         });

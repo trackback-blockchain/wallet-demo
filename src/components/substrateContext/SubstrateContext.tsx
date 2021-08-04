@@ -3,6 +3,9 @@ import React, { useReducer, useContext, Dispatch } from "react";
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { keyring } from '@polkadot/ui-keyring';
 
+import rpc from '../../config/rpc.json';
+import types from '../../config/types.json';
+
 const INIT_STATE = {
     apiState: null,
     api: null,
@@ -11,23 +14,25 @@ const INIT_STATE = {
 
 type State = typeof INIT_STATE;
 
-const reducer = (state:any, action:any) => {
+const NODE_END_POINT = process.env.NODE_END_POINT || 'wss://trackback.dev/'
+
+const reducer = (state: any, action: any) => {
     console.log(action.type)
     switch (action.type) {
         case 'CONNECT_INIT':
             return { ...state, apiState: 'CONNECT_INIT' };
-      
-          case 'CONNECT':
+
+        case 'CONNECT':
             return { ...state, api: action.payload, apiState: 'CONNECTING' };
-      
-          case 'CONNECT_SUCCESS':
+
+        case 'CONNECT_SUCCESS':
             return { ...state, apiState: 'READY' };
-      
-          case 'CONNECT_ERROR':
+
+        case 'CONNECT_ERROR':
             return { ...state, apiState: 'ERROR', apiError: action.payload };
 
         default:
-            throw new Error(`Unknown type: ${action.type}`);
+            return { ...state }
     }
 }
 
@@ -39,32 +44,27 @@ function isKeyringLoaded() {
     }
 }
 
-const connect = async (state: State, dispatch:Dispatch<any>) => {
+const connect = async (state: State, dispatch: Dispatch<any>) => {
     const { apiState } = state;
     // We only want this function to be performed once
     if (apiState || isKeyringLoaded()) return;
 
-    dispatch({ type: 'CONNECT_INIT' });
+    await dispatch({ type: 'CONNECT_INIT' });
 
-    const provider = new WsProvider('wss://trackback.dev/');
-    const _api = await ApiPromise.create({ provider: provider });
-    
+    const provider = new WsProvider(NODE_END_POINT);
+    const _api = await ApiPromise.create({ provider: provider, types, rpc });
+
     isKeyringLoaded() || keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
 
-    console.log('okfff', _api.genesisHash.toHex());
-
     dispatch({ type: 'CONNECT_SUCCESS' });
+    dispatch({ type: 'CONNECT', payload: _api });
 
-  
-    // Set listeners for disconnection and reconnection event.
-    // _api.on('connected', () => {
-        
-    //     dispatch({ type: 'CONNECT', payload: _api });
-    //     // `ready` event is not emitted upon reconnection and is checked explicitly here.
-    //     _api.isReady.then((_api) =>  dispatch({ type: 'CONNECT_SUCCESS' }));
-    // });
-    // _api.on('ready', () => dispatch({ type: 'CONNECT_SUCCESS' }));
-    // _api.on('error', err => dispatch({ type: 'CONNECT_ERROR', payload: err }));
+    _api.on('connected', () => {
+        dispatch({ type: 'CONNECT', payload: _api });
+    });
+    _api.on('ready', () => dispatch({ type: 'CONNECT_SUCCESS' }));
+    _api.on('error', err => dispatch({ type: 'CONNECT_ERROR', payload: err }));
+
 };
 
 

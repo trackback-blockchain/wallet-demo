@@ -1,17 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 
+import { useHistory } from 'react-router';
+
 import Button from 'components/inputs/Button';
 
-// import { ReactComponent as Check } from '../resources/check.svg';
 import { ReactComponent as Layer } from '../resources/Layer_2.svg';
 import { ReactComponent as Ellipse } from '../resources/Ellipse_181.svg';
-// import { ReactComponent as Ellipse2 } from '../resources/Ellipse_182.svg';
 
 import './signUpSuccess.scss';
 
 
 function SignUpSuccess() {
+    const history = useHistory();
+
+    const onClick = () => {
+        history.push("/");
+    }
 
     return (
         <div className="container-sg-success">
@@ -24,21 +29,6 @@ function SignUpSuccess() {
                         top: 18px;
                         position: absolute;
                     `} />
-                   
-
-                        {/* <Ellipse2 css={css`  
-                        position: absolute;
-                        right: calc(50% - 50px);
-
-                    `} /> */}
-{/* 
-                        <Check css={css`  
-                        position: absolute;
-                        right: calc(50% - 43px);
-                        top: 10px;
-                    `} /> */}
-
-                    
 
                     <Ellipse css={css` 
                     `} />
@@ -48,10 +38,10 @@ function SignUpSuccess() {
 
                 <h5>You’re in!</h5>
                 <h6 className="sub">
-                Thanks for signing up! Start filling out your profile information by verifying your identity documents.
+                    Thanks for signing up! Start filling out your profile information by verifying your identity documents.
                 </h6>
 
-                <Button  className="button-getstarted" >
+                <Button className="button-getstarted" onClick={onClick}>
                     Get Started
                 </Button>
             </div>

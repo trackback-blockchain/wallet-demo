@@ -14,31 +14,13 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import TextField from '../inputs/TextField'
-import { ROUTE_ROOT } from '../../constants';
-
-// import { colorBrandPrimary } from 'styles/color';
+import { ROUTE_SUCCESS } from '../../constants';
 
 import { css } from '@emotion/react';
 import './signup.scss'
 
-// const useStyles = makeStyles(() => ({
-//     root: {
-//         display: 'flex',
-//         flexWrap: 'wrap',
-
-//     },
-//     link: {
-//         letterSpacing: '0.05em',
-//         textDecorationLine: 'underline',
-//         textTransform: 'capitalize',
-//         width: '100%',
-//         color: colorBrandPrimary,
-//     }
-// }));
-
-
 function SignUp() {
-    // const classes = useStyles();
+   
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -69,7 +51,7 @@ function SignUp() {
         await dispatch(updateUserData({ name, lastName, email, password }));
         await dispatch(changeLoggedIn(true));
 
-        history.push(ROUTE_ROOT);
+        history.push(ROUTE_SUCCESS);
     };
 
     const goback = ()=>{
