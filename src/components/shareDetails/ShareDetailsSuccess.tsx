@@ -1,25 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 
-import { useHistory } from 'react-router';
-
 import Button from 'components/inputs/Button';
-
 import { ReactComponent as Layer } from '../resources/Layer_2.svg';
 import { ReactComponent as Ellipse } from '../resources/Ellipse_181.svg';
 
-import './signUpSuccess.scss';
+import './shareSuccess.scss';
 
 
-function SignUpSuccess() {
-    const history = useHistory();
-
-    const onClick = () => {
-        history.push("/");
-    }
+function ShareDetailsSuccess() {
 
     return (
-        <div className="container-sg-success">
+        <div className="container-share-success">
 
 
             <div className="card">
@@ -36,13 +28,13 @@ function SignUpSuccess() {
 
                 </div>
 
-                <h5>You’re in!</h5>
+                <h5>Access granted</h5>
                 <h6 className="sub">
                     Thanks for signing up! Start filling out your profile information by verifying your identity documents.
                 </h6>
 
-                <Button className="button-getstarted" onClick={onClick}>
-                    Get Started
+                <Button className="button-getstarted" >
+                    Okay
                 </Button>
             </div>
 
@@ -51,4 +43,4 @@ function SignUpSuccess() {
     )
 }
 
-export default SignUpSuccess
+export default ShareDetailsSuccess;

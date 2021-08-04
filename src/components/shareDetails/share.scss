@@ -1,0 +1,95 @@
+@import "../../styles/colors.scss";
+
+.container-share-detail {
+    width: 100vw;
+    height: 100vh;
+    min-height: 732px;
+    background-color: $colorCream;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    font-family: Mulish;
+    font-style: normal;
+
+    .banner {
+        top: 0;
+        left: 0;
+        min-height: 375px;
+        width: 100vw;
+        background-color: $colorBrandPrimary;
+        border-bottom-right-radius: 100px;
+    }
+
+    .back-btn-container {
+        display: flex;
+        margin-top: 25px;
+    }
+
+    .back-title {
+        font-weight: bold;
+        font-size: 1.5rem;
+        letter-spacing: 0.02em;
+        text-align: left;
+
+        color: $colorCream;
+        padding: 12px;
+    }
+
+    .info {
+        margin-top: 30px;
+
+        .info-logo {
+            width: 94px;
+            height: 94px;
+     
+            position: relative;
+            // width: 100%;
+            align-items: center;
+            margin: 0 auto;
+        }
+        
+        .info-text {
+            margin-top: 50px;
+            font-size: 18px;
+            line-height: 150%;
+            text-align: center;
+            letter-spacing: 0.01em;
+            color: $colorCream;
+        }
+    }
+
+    .title {
+        position: absolute;
+        width: 232px;
+        height: 48px;
+        left: 22px;
+        top: 100px;
+
+        font-weight: bold;
+        font-size: 38px;
+        line-height: 125%;
+        color: #ffffff;
+    }
+
+    .button-container {
+        margin-top: 26px;
+        width: 100%;
+        padding: 25px;
+    }
+
+    .button-access {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 16px;
+        text-transform: capitalize;
+        letter-spacing: 0.05em;
+
+        margin-top: 16px;
+        width: 100%;
+        height: 56px;
+    }
+}

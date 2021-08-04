@@ -20,21 +20,19 @@ function Welcome() {
 
     return (
         <div className="container-welcome">
-            <div className="logo">
-                <Logo />
+            <div className="banner">
+                <div className="logo">
+                    <Logo width="66" height="66" />
+                </div>
+
+                <h4 className="heading">Welcome to the TANZ wallet.</h4>
             </div>
 
-            <h4 className="heading">Welcome to the TANZ identity wallet</h4>
-            <h6 className="subtitle color-grey6">
-                Save time, create your identity and share it with other TANZ members
-            </h6>
-
-
-            <Button gold className="btn_register" onClick={regiester}>
+            <Button className="btn_register" onClick={regiester}>
                 Register
             </Button>
 
-            <Button className="btn_login" onClick={login} >
+            <Button cream className="btn_login" onClick={login} >
                 Login
             </Button>
 

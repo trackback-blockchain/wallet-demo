@@ -24,7 +24,7 @@ export const appSlice = createSlice({
     reducers: {
         // standard reducer logic, with auto-generated action types per reducer
         changeInit: (state, action) => {
-            state.init = action.payload;
+            state.init = action.payload.init;
         },
         changeLoggedIn: (state, action) => {
             state.loggedIn = action.payload;
@@ -35,5 +35,8 @@ export const appSlice = createSlice({
 
 export const { changeInit, changeLoggedIn } = appSlice.actions;
 export const isLoggedIn = (state: AppState) => state.app.loggedIn;
+export const isInit = (state: AppState) => state.app.init;
+
+
 
 export default appSlice.reducer;

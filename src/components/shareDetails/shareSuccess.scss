@@ -1,0 +1,70 @@
+@import "../../styles/colors.scss";
+
+.container-share-success {
+    width: 100vw;
+    height: 100vh;
+    background-color: $colorGrey;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    padding-left: 22px;
+    padding-right: 22px;
+    // align-items: center;
+    // justify-content: center;
+
+    .card {
+        position: relative;
+        height: 401px;
+        width: 100%;
+        top: 78px;
+
+        background: #ffffff;
+        border-radius: 8px;
+        padding-right: 26px;
+        padding-left: 26px;
+    }
+
+    .logo {
+        position: relative;
+        width: 100%;
+        align-items: center;
+        top: 25px;
+        height: 104px;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+    }
+
+    h5 {
+        font-style: normal;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 125%;
+        /* identical to box height, or 30px */
+
+        text-align: center;
+        letter-spacing: 0.01em;
+
+        /* TANZ primary green */
+
+        color: $colorBrandPrimary;
+    }
+
+    .sub {
+        text-align: center;
+        height: 63px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 150%;
+        text-align: center;
+        color: $colorGrey;
+    }
+
+    .button-getstarted {
+        width: 100%;
+        height: 56px;
+    }
+}

@@ -9,36 +9,19 @@ import { changeLoggedIn } from 'reducers/app';
 import CryptoJS from 'crypto-js';
 
 import { css } from '@emotion/react';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-import { makeStyles } from '@material-ui/core';
-import { default as MatrialBtn } from '@material-ui/core/Button';
 import Button from 'components/inputs/Button';
 
 import TextField from '../inputs/TextField';
-import { ROUTE_REGISTER, ROUTE_ROOT } from '../../constants';
+import { ROUTE_ROOT } from '../../constants';
 
-import { colorBrandPrimary } from 'styles/color';
 import './login.scss';
 
 
-const useStyles = makeStyles(() => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-
-    },
-    link: {
-        letterSpacing: '0.05em',
-        textDecorationLine: 'underline',
-        textTransform: 'capitalize',
-        width: '100%',
-        color: colorBrandPrimary,
-    }
-}));
-
-
 function Login() {
-    const classes = useStyles();
+
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -47,9 +30,6 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
 
-    function regiester() {
-        history.push(ROUTE_REGISTER);
-    }
 
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -73,11 +53,20 @@ function Login() {
 
     };
 
+    const goback = () => {
+        history.goBack();
+    }
+
     return (
         <div className="container-login">
+            <div className="banner">
 
-            <div className="heading">
-                <h4 >Login</h4>
+                <IconButton aria-label="back" style={{ marginTop: 25, }} onClick={goback}>
+                    <ArrowBackIcon fontSize="large" style={{ color: '#DEC058' }} />
+                </IconButton>
+
+                <div className="title">Login</div>
+
             </div>
 
             <div className="signup">
@@ -95,22 +84,14 @@ function Login() {
 
                 </div>
 
-
-                <Button gold className="button-continue" onClick={handleLogin} >
+                <Button className="button-continue" onClick={handleLogin} >
                     Login
                 </Button>
 
-                <MatrialBtn className={`${classes.link} button-register`} onClick={regiester}>
-                    Register
-                </MatrialBtn>
-
             </div>
-
-
 
         </div>
     )
 }
-
 
 export default Login
