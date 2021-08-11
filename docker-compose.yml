@@ -1,0 +1,19 @@
+version: '3.0'
+services: 
+  api:
+    image: 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com/wallet-api:latest 
+    environment: 
+      PORT: 80
+  wallet:
+    image: 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com/wallet:latest 
+    environment: 
+      PORT: 80
+      API_HOST: https://wallet.trackback.dev
+      NODE_END_POINT: wss://blockchain.trackback.dev/
+  nginx:
+    image: 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com/wallet-nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - wallet
+      - api
