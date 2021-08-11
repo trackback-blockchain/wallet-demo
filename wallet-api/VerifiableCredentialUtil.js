@@ -1,7 +1,5 @@
-import { createPrivateKey, KeyObject } from "crypto";
-import { VerifiableCredential, VerifiableCredentialPresentation } from "types";
-// @ts-ignore
-import { CompactSign } from 'jose/dist/browser/jws/compact/sign'
+const { CompactSign } = require('jose/jws/compact/sign')
+const { createPrivateKey } = require('crypto');
 
 function generateUnique() {
   return Math.random().toString(16).slice(2)
@@ -9,7 +7,7 @@ function generateUnique() {
 
 class VerifiableCredentialUtil {
 
-  createCredential(givenName: string, familyName: string): Promise<VerifiableCredential> {
+  createCredential(givenName, familyName) {
     const vc = {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
@@ -44,7 +42,7 @@ class VerifiableCredentialUtil {
     return this.addProof(vc);
   }
 
-  async addProof(vc: VerifiableCredential): Promise<VerifiableCredential> {
+  async addProof(vc) {
     try {
 
       console.log('object')
@@ -68,7 +66,7 @@ class VerifiableCredentialUtil {
   }
 
 
-  async createProof(jsonstr: string, privateKey: KeyObject) {
+  async createProof(jsonstr, privateKey) {
     const encoder = new TextEncoder();
 
     const jws_compact = await new CompactSign(encoder.encode(jsonstr))
@@ -86,9 +84,9 @@ class VerifiableCredentialUtil {
     return proof;
   }
 
-  async createPresentation(vc: VerifiableCredential, privateKey: KeyObject, publicKey: KeyObject): Promise<VerifiableCredentialPresentation> {
+  async createPresentation(vc, privateKey, publicKey) {
 
-    const presentation: VerifiableCredentialPresentation = {
+    const presentation = {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
       ],
@@ -111,4 +109,6 @@ class VerifiableCredentialUtil {
 
 }
 
-export default new VerifiableCredentialUtil();
+module.exports = {
+  VerifiableCredentialUtil: new VerifiableCredentialUtil()
+}

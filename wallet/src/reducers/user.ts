@@ -1,9 +1,11 @@
 
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { User } from 'types';
 // @ts-ignore
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppState } from 'store';
+
+import { client } from '../api'
 
 const IDENTIFIER = "__user"
 
@@ -20,23 +22,37 @@ const initState: User = {
     ...data
 }
 
+
+export const register = createAsyncThunk(
+    'users/register',
+    async ({ name, lastName }: { [key: string]: string }) => {
+        const API_HOST = process.env.API_HOST || 'http://localhost'
+        const response = await client.post(`${API_HOST}/api/register`, { name, lastName });
+        return response;
+    }
+)
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: initState,
     reducers: {
 
         updateUserData: (state, action) => {
-            const { name, lastName = "", email = "", password = "", vc, vpc, publicKey, privateKey } = action.payload;
+            const { name, lastName = "", email = "", password = "" } = action.payload;
             state.name = name;
             state.lastName = lastName;
             state.email = email;
 
             state.password = password;
-            state.documents = [{ id: '1', title: "New Zealand Passport", subTitle: "Department of Internal Affairs", vc: vc, vpc: vpc }]
-
-            reactLocalStorage.setObject(IDENTIFIER, { name: name, email: email, password: state.password, documents: state.documents, vc, vpc, publicKey, privateKey });
-
         },
+    },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder.addCase(register.fulfilled, (state, action) => {
+            console.log(action.payload)
+            state.documents = [{ id: '1', title: "New Zealand Passport", subTitle: "Department of Internal Affairs", vc: action.payload.vc, vpc: action.payload.vpc }]
+            reactLocalStorage.setObject(IDENTIFIER, { ...state, ...action.payload });
+        })
     },
 });
 

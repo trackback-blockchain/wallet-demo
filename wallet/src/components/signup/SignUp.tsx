@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useState } from 'react';
+// @ts-ignore
+import CryptoJS from 'crypto-js';
 
 import { useHistory } from 'react-router';
 import { useDispatch } from 'react-redux';
 
-import { updateUserData } from 'reducers/user';
+import { register, updateUserData } from 'reducers/user';
 import { changeLoggedIn } from 'reducers/app';
 
 // import { makeStyles } from '@material-ui/core';
@@ -19,16 +21,9 @@ import { ROUTE_SUCCESS } from '../../constants';
 import { css } from '@emotion/react';
 import './signup.scss'
 
-import VerifiableCredentialUtil from 'utils/VerifiableCredentialUtil';
-import { VerifiableCredential, VerifiableCredentialPresentation } from 'types';
-// @ts-ignore
-import { generateKeyPair, GenerateKeyPairResult } from 'jose/dist/browser/util/generate_key_pair'
-import { KeyObject } from 'crypto';
-// @ts-ignore
-import CryptoJS from 'crypto-js';
 
 function SignUp() {
-   
+
     const history = useHistory();
     const dispatch = useDispatch();
 
@@ -58,22 +53,14 @@ function SignUp() {
 
         const hash = CryptoJS.SHA256(password);
 
-        const keyPair: GenerateKeyPairResult = await generateKeyPair('EdDSA');
-        const publicKey = (keyPair.publicKey as KeyObject).export({ format: 'der', type: 'spki' }).toString('base64');
-        const privateKey = (keyPair.privateKey as KeyObject).export({ format: 'der', type: 'pkcs8' }).toString('base64');
-
-        const vc: VerifiableCredential = await VerifiableCredentialUtil.createCredential(name, lastName);
-
-        const vpc: VerifiableCredentialPresentation = await VerifiableCredentialUtil.createPresentation(vc, (keyPair.privateKey as KeyObject), (keyPair.publicKey as KeyObject));
-
-
-        await dispatch(updateUserData({ name, lastName, email, password: hash.toString(CryptoJS.enc.Base64), vc, vpc, publicKey, privateKey }));
+        await dispatch(updateUserData({ name, lastName, email, password: hash.toString(CryptoJS.enc.Base64) }));
+        await dispatch(register({ name, lastName }));
         await dispatch(changeLoggedIn(true));
 
         history.push(ROUTE_SUCCESS);
     };
 
-    const goback = ()=>{
+    const goback = () => {
         history.goBack();
     }
 

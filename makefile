@@ -1,14 +1,9 @@
-
 all:
-	docker-compose up --build --force-recreate --remove-orphans -d
-
+	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
 
 down:
-	docker-compose stop -t 1
+	docker-compose -f ./docker-compose-local.yml stop -t 1
 
 clean:
 	docker-compose stop -t 1
 	docker-compose rm -f
-
-e2e:
-	npm run cy:run

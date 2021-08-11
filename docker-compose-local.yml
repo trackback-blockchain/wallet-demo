@@ -1,0 +1,20 @@
+version: '3.0'
+services: 
+  api:
+    build: ./wallet-api
+    environment: 
+      PORT: 80
+  wallet:
+    build: ./wallet
+    environment: 
+      PORT: 80
+      API_HOST: http://localhost
+      NODE_END_POINT: wss://blockchain.trackback.dev/
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - 80:80
+    depends_on:
+      - wallet
+      - api
