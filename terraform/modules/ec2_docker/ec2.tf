@@ -3,7 +3,7 @@ data "aws_lb_target_group" "data_aws_alb_tg_wallet" {
 }
 
 resource "aws_security_group" "aws_sg_wallet_demo" {
-  name = "security_group for substrate node"
+  name = "security_group for aws_sg_wallet_demo"
 
   ingress {
     description = "SSH from the internet"

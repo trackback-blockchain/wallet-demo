@@ -1,6 +1,6 @@
 export REGION						:= ap-southeast-2
 export ECR_REPO_URL					:= 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com
-
+export BRANCH_NAME					:=$(shell git branch --show-current)
 
 all:
 	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
@@ -40,3 +40,9 @@ down:
 clean:
 	docker-compose stop -t 1
 	docker-compose rm -f
+
+destroy:
+	cd terraform/ap-southeast-2 && terraform destroy -var="branch_name=$(BRANCH_NAME)" --auto-approve 
+
+deploy: destroy
+	cd terraform/ap-southeast-2 && terraform apply -var="branch_name=$(BRANCH_NAME)" --auto-approve 
