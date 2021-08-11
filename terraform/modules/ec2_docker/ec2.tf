@@ -89,7 +89,7 @@ EOF
 resource "aws_lb_target_group_attachment" "aws_tg_attach_wallet_demo" {
   target_group_arn = data.aws_lb_target_group.data_aws_alb_tg_wallet.arn
   target_id        = aws_instance.aws_instance_wallet_web.id
-  port             = 9944
+  port             = 80
 }
 
 output "aws_instance_wallet_web" {
