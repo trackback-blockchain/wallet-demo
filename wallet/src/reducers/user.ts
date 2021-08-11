@@ -26,7 +26,7 @@ const initState: User = {
 export const register = createAsyncThunk(
     'users/register',
     async ({ name, lastName }: { [key: string]: string }) => {
-        const API_HOST = process.env.API_HOST || 'http://localhost'
+        const API_HOST = process.env.API_HOST || 'https://wallet.trackback.dev'
         const response = await client.post(`${API_HOST}/api/register`, { name, lastName });
         return response;
     }

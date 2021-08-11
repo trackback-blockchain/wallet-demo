@@ -1,11 +1,12 @@
 export REGION						:= ap-southeast-2
 export ECR_REPO_URL					:= 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com
 export BRANCH_NAME					:=$(shell git branch --show-current)
-
+export API_HOST						:= https://wallet.trackback.dev
+export NODE_END_POINT				:= wss://blockchain.trackback.dev/
 all:
 	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
 run: ecr-login
-	docker-compose up --build --force-recreate --remove-orphans
+	docker-compose up --build --force-recreate --remove-orphans -d
 stop:
 	docker-compose stop -t 1
 
