@@ -1,13 +1,22 @@
 import { useHistory } from 'react-router';
-
+import { useParams } from "react-router-dom";
 
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import './details.scss'
+import { getDocumentbyId } from 'reducers/user';
+import { AppState } from 'store';
+import { useSelector } from 'react-redux';
+
+interface ParamTypes {
+    id: string
+}
 
 function DocumentDetails() {
     const history = useHistory();
+    let { id } = useParams<ParamTypes>();
+    const doc = useSelector((state: AppState) => getDocumentbyId(state, id));
 
     const goback = () => {
         history.goBack();
@@ -28,7 +37,7 @@ function DocumentDetails() {
                 </div>
 
 
-                <div className="title">doc details </div>
+                <div className="title">{doc?.title}</div>
 
             </div>
         </div>

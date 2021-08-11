@@ -74,6 +74,7 @@ function App() {
               <PrivateRoute exact path={ROUTE_VC} component={DocumentDetails} />
               <PrivateRoute exact path={ROUTE_SHARE} component={ShareDetails} />
               <PrivateRoute exact path={ROUTE_SHARING} component={SharingAccess} />
+              <PrivateRoute exact path={`${ROUTE_VC}/:id`} component={DocumentDetails} />
 
               <PrivateRoute exact path="/" component={Home} />
 

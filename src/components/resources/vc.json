@@ -1,0 +1,35 @@
+{
+    "@context": [
+        "https://www.w3.org/2018/credentials/v1",
+        "https://trackback.co/identity/v1"
+    ],
+    "id": "something",
+    "type": [
+        "VerifiableCredential",
+        "DigitalPassportCredential"
+    ],
+    "issuer": "did:trackback.dev:DID_ISSUER_HASH",
+    "expires": "2028-01-01T00:00:00Z",
+    "credentialSubject": {
+        "type": [
+            "DigitalPassport"
+        ],
+        "id": "https://wakanda/dia/001",
+        "passport": {
+            "id": "did:trackback.dev:DID_PASSPORT_HASH",
+            "type": "DigitalPassport",
+            "traveler": {
+                "givenName": "",
+                "familyName": "",
+                "citizenship": ""
+            }
+        }
+    },
+    "proof": {
+        "type": "Ed25519Signature2020",
+        "created": "",
+        "verificationMethod": "did:trackback.dev:0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3",
+        "proofPurpose": "assertionMethod",
+        "proofValue": ""
+      }
+}

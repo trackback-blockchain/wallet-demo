@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { getUser } from 'reducers/user';
+import { getDocuments, getUser } from 'reducers/user';
 
 import Documents from 'components/pageComponents/Documents';
 import Tabs from 'components/pageComponents/Tabs';
@@ -12,6 +12,7 @@ import './home.scss';
 function Home() {
 
     const user = useSelector(getUser);
+    const docs = useSelector(getDocuments);
 
     return (
         <div className="container-home" >
@@ -30,7 +31,7 @@ function Home() {
                     <div className="page-heading">Your documents</div>
 
 
-                    <Documents documents={[{id:'asd', title:"New Zealand Passport", subTitle:"Department of Internal Affairs"}]} />
+                    <Documents documents={docs} />
 
                 </div>
 

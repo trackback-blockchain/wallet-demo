@@ -1,11 +1,6 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-import { mnemonicGenerate } from '@polkadot/util-crypto';
-import { keyring } from '@polkadot/ui-keyring';
-
 import { User } from 'types';
-// @ts-ignore
-import CryptoJS from 'crypto-js';
 // @ts-ignore
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppState } from 'store';
@@ -31,19 +26,15 @@ export const userSlice = createSlice({
     reducers: {
 
         updateUserData: (state, action) => {
-            const { name, lastName = "", email = "", password = "" } = action.payload;
+            const { name, lastName = "", email = "", password = "", vc, vpc, publicKey, privateKey } = action.payload;
             state.name = name;
             state.lastName = lastName;
             state.email = email;
 
-            const hash = CryptoJS.SHA256(password);
+            state.password = password;
+            state.documents = [{ id: '1', title: "New Zealand Passport", subTitle: "Department of Internal Affairs", vc: vc, vpc: vpc }]
 
-            state.password = password.length > 0 ? hash.toString(CryptoJS.enc.Base64) : "";
-
-            const mnemonic = mnemonicGenerate();
-            const { json } = keyring.addUri(mnemonic, password, { name }, 'sr25519');
-
-            reactLocalStorage.setObject(IDENTIFIER, { name: name, email: email, password: state.password, mnemonic, json });
+            reactLocalStorage.setObject(IDENTIFIER, { name: name, email: email, password: state.password, documents: state.documents, vc, vpc, publicKey, privateKey });
 
         },
     },
@@ -52,4 +43,7 @@ export const userSlice = createSlice({
 export const { updateUserData } = userSlice.actions;
 export const isLoggedIn = (state: AppState) => state.user.email.length > 0 && !!state.user.password;
 export const getUser = (state: AppState) => state.user;
+export const getDocuments = (state: AppState) => state.user.documents;
+export const getDocumentbyId = (state: AppState, id: string) => state.user.documents?.find(k => k.id === id);
+
 export default userSlice.reducer;

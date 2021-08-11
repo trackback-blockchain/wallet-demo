@@ -14,7 +14,7 @@ const INIT_STATE = {
 
 type State = typeof INIT_STATE;
 
-const NODE_END_POINT = process.env.NODE_END_POINT || 'wss://trackback.dev/'
+const NODE_END_POINT = process.env.NODE_END_POINT || 'wss://blockchain.trackback.dev/'
 
 const reducer = (state: any, action: any) => {
     console.log(action.type)
