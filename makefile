@@ -4,19 +4,19 @@ export BRANCH_NAME					:=$(shell git branch --show-current)
 
 all:
 	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
-run:
+run: ecr-login
 	docker-compose up --build --force-recreate --remove-orphans
 stop:
 	docker-compose stop -t 1
 
-
-ecr:
+ecr-login:
 	aws ecr get-login-password \
     --region ${REGION} \
 	| docker login \
 		--username AWS \
 		--password-stdin ${ECR_REPO_URL}
 
+ecr: ecr-login
 	-aws ecr create-repository --repository-name wallet-api || true
 	-aws ecr create-repository --repository-name wallet || true
 	-aws ecr create-repository --repository-name wallet-nginx || true

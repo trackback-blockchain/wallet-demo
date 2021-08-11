@@ -1,5 +1,5 @@
 data "aws_lb_target_group" "data_aws_alb_tg_wallet" {
-  arn = "arn:aws:elasticloadbalancing:ap-southeast-2:533545012068:targetgroup/SubstrateNode/0314959edf168f21"
+  arn = "arn:aws:elasticloadbalancing:ap-southeast-2:533545012068:targetgroup/Wallet/e2f4cc93c2ea070d"
 }
 
 resource "aws_security_group" "aws_sg_wallet_demo" {
