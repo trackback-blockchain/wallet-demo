@@ -32,11 +32,12 @@ build-wallet:
 	docker tag wallet:latest $(ECR_REPO_URL)/wallet:latest
 	docker push $(ECR_REPO_URL)/wallet:latest
 
-build: build-api build-wallet
+build-nginx:
 	cd nginx  && docker build -f ./Dockerfile --no-cache -t wallet-nginx:latest  .	
 	docker tag wallet-nginx:latest $(ECR_REPO_URL)/wallet-nginx:latest
 	docker push $(ECR_REPO_URL)/wallet-nginx:latest
 
+build: build-api build-wallet build-nginx
 
 down:
 	docker-compose -f ./docker-compose-local.yml stop -t 1
