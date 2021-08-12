@@ -7,8 +7,10 @@ import { ReactComponent as Ellipse } from '../resources/Ellipse_181.svg';
 
 import './shareSuccess.scss';
 
-
-function ShareDetailsSuccess() {
+type Props = {
+    accept: () => void
+}
+function ShareDetailsSuccess({ accept }: Props) {
 
     return (
         <div className="container-share-success">
@@ -33,7 +35,7 @@ function ShareDetailsSuccess() {
                     Thanks for signing up! Start filling out your profile information by verifying your identity documents.
                 </h6>
 
-                <Button className="button-getstarted" >
+                <Button className="button-getstarted" onClick={accept}>
                     Okay
                 </Button>
             </div>

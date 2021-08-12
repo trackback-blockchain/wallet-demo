@@ -22,18 +22,21 @@ ecr: ecr-login
 	-aws ecr create-repository --repository-name wallet || true
 	-aws ecr create-repository --repository-name wallet-nginx || true
 
-build:
-	cd wallet && docker build -f ./Dockerfile --no-cache -t wallet:latest  .
-	cd nginx  && docker build -f ./Dockerfile --no-cache -t wallet-nginx:latest  .
+build-api:
 	cd wallet-api && docker build -f ./Dockerfile --no-cache -t wallet-api:latest  .
-
-	docker tag wallet:latest $(ECR_REPO_URL)/wallet:latest
-	docker tag wallet-nginx:latest $(ECR_REPO_URL)/wallet-nginx:latest
 	docker tag wallet-api:latest $(ECR_REPO_URL)/wallet-api:latest
-
-	docker push $(ECR_REPO_URL)/wallet:latest
-	docker push $(ECR_REPO_URL)/wallet-nginx:latest
 	docker push $(ECR_REPO_URL)/wallet-api:latest
+
+build-wallet:
+	cd wallet && docker build -f ./Dockerfile --no-cache -t wallet:latest  .
+	docker tag wallet:latest $(ECR_REPO_URL)/wallet:latest
+	docker push $(ECR_REPO_URL)/wallet:latest
+
+build: build-api build-wallet
+	cd nginx  && docker build -f ./Dockerfile --no-cache -t wallet-nginx:latest  .	
+	docker tag wallet-nginx:latest $(ECR_REPO_URL)/wallet-nginx:latest
+	docker push $(ECR_REPO_URL)/wallet-nginx:latest
+
 
 down:
 	docker-compose -f ./docker-compose-local.yml stop -t 1

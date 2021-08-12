@@ -7,7 +7,12 @@ import Button from 'components/inputs/Button';
 
 import './share.scss'
 
-function ShareDetails() {
+type Props = {
+    accept: () => void;
+    decline: () => void;
+}
+
+function ShareDetails({ accept, decline }: Props) {
     const history = useHistory();
 
     const goback = () => {
@@ -32,7 +37,7 @@ function ShareDetails() {
                 <div className="info">
                     <div className="info-logo"></div>
 
-                    <div className="info-text">Would you like to share your account information with Onside?</div>
+                    <div className="info-text">Would you like to share your account information?</div>
                 </div>
 
 
@@ -41,10 +46,10 @@ function ShareDetails() {
             </div>
 
             <div className="button-container">
-                <Button className="button-access" >
+                <Button className="button-access" onClick={accept}>
                     Grant access
                 </Button>
-                <Button cream className="button-access" >
+                <Button cream className="button-access" onClick={decline}>
                     Deny access
                 </Button>
 

@@ -30,14 +30,14 @@ app.post('/api/register', async (req, res) => {
 
     const vc = await VerifiableCredentialUtil.createCredential(name, lastName);
 
-    const vpc = await VerifiableCredentialUtil.createPresentation(vc, (keyPair.privateKey), (keyPair.publicKey));
+    const vcp = await VerifiableCredentialUtil.createPresentation(vc, (keyPair.privateKey), (keyPair.publicKey));
 
 
     res.status(200).json({
         publicKey,
         privateKey,
         vc,
-        vpc
+        vcp
     })
 })
 

@@ -4,11 +4,12 @@ export type App = {
     loggedIn: boolean,
     socket: string,
     types: any,
+    sharingVCP:boolean;
 
 }
 
 export type VerifiableCredential = {
-    [key: string]: string | Array<string> | object
+    [key: string]: string | Array<string> | object | any
 }
 
 export type VerifiableCredentialPresentation = {
@@ -28,7 +29,7 @@ export type User = {
     publicKey?: string;
     privateKey?: string;
     vc?: VerifiableCredential;
-    vpc?: VerifiableCredentialPresentation;
+    vcp?: VerifiableCredentialPresentation;
 }
 
 
@@ -37,7 +38,7 @@ export type Document = {
     title: string;
     subTitle: string;
     vc?: VerifiableCredential;
-    vpc?: VerifiableCredentialPresentation;
+    vcp?: VerifiableCredentialPresentation;
 }
 
 export type DocumentsProps = {
