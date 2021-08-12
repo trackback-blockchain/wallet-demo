@@ -87,6 +87,15 @@ function DocumentDetails() {
                         <Typography variant="h5" component="h2">
                             {doc?.vc?.credentialSubject.passport?.traveler?.familyName}
                         </Typography>
+
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+
+                            Blood Type
+
+                        </Typography>
+                        <Typography variant="h5" component="h2">
+                            {doc?.vc?.credentialSubject.passport?.traveler?.bloodType}
+                        </Typography>
                     </CardContent>
                 </Card>
 

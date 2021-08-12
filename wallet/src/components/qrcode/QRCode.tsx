@@ -12,10 +12,10 @@ import ShareDetails from 'components/shareDetails/ShareDetails';
 import { isSharingVCP, setVCPIsSharing, shareCredentials } from 'reducers/app';
 import { getDocuments } from 'reducers/user';
 
-import './qrcode.scss';
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
 
+import './qrcode.scss';
 
 function validateUrl(value: string) {
     return /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi.test(value);
@@ -44,10 +44,8 @@ function QRCode() {
     }, [isSharing, mode]);
 
     const handleScan = async (data: any) => {
-        console.log(data)
-        setUrl(data);
 
-        console.log(validateUrl(data))
+        setUrl(data);
 
         if (validateUrl(data)) {
             setMode(MODES_QUESTION);
@@ -58,8 +56,7 @@ function QRCode() {
         console.error(err)
     }
 
-
-    const shareAccess = () => {
+    const shareAccess = (sharing: { [key: string]: boolean }) => {
         if (!documents) {
             setMode(MODES_QR);
             return;
@@ -69,7 +66,8 @@ function QRCode() {
 
         if (validateUrl(url)) {
             dispatch(setVCPIsSharing(true));
-            const vcp = doc.vcp;
+
+            const vcp = sharing.bloodType ? doc.vcpFull : doc.vcp;
 
             if (!vcp) return;
             setMode(MODES_SHARING);
@@ -79,7 +77,7 @@ function QRCode() {
     }
 
     const decline = () => {
-        setMode(MODES_SHARING);
+        setMode(MODES_QR);
     }
 
     const sharingSuccess = () => {
@@ -96,7 +94,7 @@ function QRCode() {
     }
 
     if (mode === MODES_END) {
-        return <ShareDetailsSuccess accept={sharingSuccess}/>
+        return <ShareDetailsSuccess accept={sharingSuccess} />
     }
 
     return (
@@ -104,10 +102,7 @@ function QRCode() {
 
             <div className="page">
 
-                <div
-                    className="qr-wrapper"
-
-                >
+                <div className="qr-wrapper" >
                     <div className="qr-title">Scan QR code</div>
                     <QrReader
                         delay={300}

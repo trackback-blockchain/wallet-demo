@@ -21,7 +21,7 @@ app.get('/api/status', function (req, res) {
 
 app.post('/api/register', async (req, res) => {
 
-    const { name, lastName } = req.body || {};
+    const { name, lastName, bloodType } = req.body || {};
 
     const keyPair = await generateKeyPair('EdDSA');
 
@@ -29,15 +29,19 @@ app.post('/api/register', async (req, res) => {
     const privateKey = (keyPair.privateKey).export({ format: 'der', type: 'pkcs8' }).toString('base64');
 
     const vc = await VerifiableCredentialUtil.createCredential(name, lastName);
+    const vcFull = await VerifiableCredentialUtil.createCredential(name, lastName, bloodType);
 
     const vcp = await VerifiableCredentialUtil.createPresentation(vc, (keyPair.privateKey), (keyPair.publicKey));
+    const vcpFull = await VerifiableCredentialUtil.createPresentation(vcFull, (keyPair.privateKey), (keyPair.publicKey));
 
 
     res.status(200).json({
         publicKey,
         privateKey,
         vc,
-        vcp
+        vcp,
+        vcFull,
+        vcpFull
     })
 })
 

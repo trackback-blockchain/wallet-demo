@@ -7,7 +7,13 @@ function generateUnique() {
 
 class VerifiableCredentialUtil {
 
-  createCredential(givenName, familyName) {
+  createCredential(givenName, familyName, bloodType) {
+    const traveller = {
+      "givenName": givenName,
+      "familyName": familyName,
+      "citizenship": "Wakanda"
+    }
+    Object.assign(traveller, { bloodType })
     const vc = {
       "@context": [
         "https://www.w3.org/2018/credentials/v1",
@@ -24,28 +30,20 @@ class VerifiableCredentialUtil {
         "type": [
           "DigitalPassport"
         ],
-        "id": `https://wakanda/dia/001`,
+        "id": `did:trackback.dev:0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3`,
         "passport": {
           "id": `did:trackback.dev:${generateUnique()}`,
           "type": "DigitalPassport",
-          "traveler": {
-            "givenName": givenName,
-            "familyName": familyName,
-            "citizenship": "Wakanda"
-          }
+          traveller
         }
       }
     }
-
-    console.log(vc)
 
     return this.addProof(vc);
   }
 
   async addProof(vc) {
     try {
-
-      console.log('object')
       const jsonstr = JSON.stringify(vc);
 
       const privateKey = createPrivateKey({
@@ -98,7 +96,7 @@ class VerifiableCredentialUtil {
     const pubkeyHex = publicKey.export({ format: 'der', type: 'spki' }).toString('base64');
 
     const proof = await this.createProof(JSON.stringify(presentation), privateKey);
-    proof.verificationMethod = `did:trackback.dev:${generateUnique()}#${pubkeyHex}`
+    proof.verificationMethod = `did:trackback.dev-presentation:${generateUnique()}#${pubkeyHex}`
 
     Object.assign(presentation, { proof: { ...proof } })
 

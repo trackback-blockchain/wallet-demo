@@ -22,11 +22,10 @@ const initState: User = {
     ...data
 }
 
-
 export const register = createAsyncThunk(
     'users/register',
     async ({ name, lastName }: { [key: string]: string }) => {
-        const response = await client.post(`/api/register`, { name, lastName });
+        const response = await client.post(`/api/register`, { name, lastName, bloodType: "A+" });
         return response;
     }
 )
@@ -50,7 +49,15 @@ export const userSlice = createSlice({
         builder
             .addCase(register.fulfilled, (state, action) => {
                 console.log(action.payload)
-                state.documents = [{ id: '1', title: "New Zealand Passport", subTitle: "Department of Internal Affairs", vc: action.payload.vc, vcp: action.payload.vcp }]
+                state.documents = [{
+                    id: '1',
+                    title: "New Zealand Passport",
+                    subTitle: "Department of Internal Affairs",
+                    vc: action.payload.vc,
+                    vcp: action.payload.vcp,
+                    vcFull: action.payload.vcFull,
+                    vcpFull: action.payload.vcpFull,
+                }]
                 reactLocalStorage.setObject(IDENTIFIER, { ...state, ...action.payload });
             })
     },

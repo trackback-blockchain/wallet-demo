@@ -39,6 +39,8 @@ export type Document = {
     subTitle: string;
     vc?: VerifiableCredential;
     vcp?: VerifiableCredentialPresentation;
+    vcFull?: VerifiableCredential;
+    vcpFull?: VerifiableCredentialPresentation;
 }
 
 export type DocumentsProps = {
