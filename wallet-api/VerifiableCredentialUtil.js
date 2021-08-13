@@ -89,8 +89,7 @@ class VerifiableCredentialUtil {
         "https://www.w3.org/2018/credentials/v1",
       ],
       "type": "VerifiablePresentation",
-      "verifiableCredential": [vc],
-      "proof": {}
+      "verifiableCredential": [vc]
     }
 
     const pubkeyHex = publicKey.export({ format: 'der', type: 'spki' }).toString('base64');

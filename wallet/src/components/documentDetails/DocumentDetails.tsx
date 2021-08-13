@@ -47,8 +47,6 @@ function DocumentDetails() {
         history.goBack();
     }
 
-
-
     return (
         <div className="container-doc-detail">
 
@@ -76,7 +74,7 @@ function DocumentDetails() {
 
                         </Typography>
                         <Typography variant="h5" component="h2">
-                            {doc?.vc?.credentialSubject.passport?.traveler?.givenName}
+                            {doc?.vc?.credentialSubject?.passport?.traveller?.givenName}
                         </Typography>
 
                         <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -85,7 +83,7 @@ function DocumentDetails() {
 
                         </Typography>
                         <Typography variant="h5" component="h2">
-                            {doc?.vc?.credentialSubject.passport?.traveler?.familyName}
+                            {doc?.vcFull?.credentialSubject?.passport?.traveller?.familyName}
                         </Typography>
 
                         <Typography className={classes.title} color="textSecondary" gutterBottom>
@@ -94,7 +92,7 @@ function DocumentDetails() {
 
                         </Typography>
                         <Typography variant="h5" component="h2">
-                            {doc?.vc?.credentialSubject.passport?.traveler?.bloodType}
+                            {doc?.vcFull?.credentialSubject?.passport?.traveller?.bloodType}
                         </Typography>
                     </CardContent>
                 </Card>
