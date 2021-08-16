@@ -5,8 +5,12 @@ export API_HOST						:= https://wallet.trackback.dev
 export NODE_END_POINT				:= wss://blockchain.trackback.dev/
 all:
 	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
+
 run: ecr-login
 	docker-compose up --build --force-recreate --remove-orphans -d
+
+redeploy: ecr-login clean run
+
 stop:
 	docker-compose stop -t 1
 
@@ -45,6 +49,7 @@ down:
 clean:
 	docker-compose stop -t 1
 	docker-compose rm -f
+	docker rmi -f $(shell docker images -q)
 
 destroy:
 	cd terraform/ap-southeast-2 && terraform destroy -var="branch_name=$(BRANCH_NAME)" --auto-approve 

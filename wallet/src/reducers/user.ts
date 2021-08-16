@@ -22,10 +22,21 @@ const initState: User = {
     ...data
 }
 
+const bloodTypes = ["A", "B", "AB", "O"];
+const rh = ["+", "-"]
+
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+}
+
+function randomBloodType() {
+    return `${bloodTypes[getRandomInt(bloodTypes.length)]}${rh[getRandomInt(rh.length)]}`
+}
+
 export const register = createAsyncThunk(
     'users/register',
     async ({ name, lastName }: { [key: string]: string }) => {
-        const response = await client.post(`/api/register`, { name, lastName, bloodType: "A+" });
+        const response = await client.post(`/api/register`, { name, lastName, bloodType: randomBloodType() });
         return response;
     }
 )

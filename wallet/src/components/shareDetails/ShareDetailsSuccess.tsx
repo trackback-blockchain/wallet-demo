@@ -30,13 +30,13 @@ function ShareDetailsSuccess({ accept }: Props) {
 
                 </div>
 
-                <h5>Access granted</h5>
+                <h5>Successfully Shared</h5>
                 <h6 className="sub">
-                    Thanks for signing up! Start filling out your profile information by verifying your identity documents.
+                    Your data has been shared
                 </h6>
 
                 <Button className="button-getstarted" onClick={accept}>
-                    Okay
+                    Continue
                 </Button>
             </div>
 
