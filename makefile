@@ -3,6 +3,7 @@ export ECR_REPO_URL					:= 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com
 export BRANCH_NAME					:=$(shell git branch --show-current)
 export API_HOST						:= https://wallet.trackback.dev
 export NODE_END_POINT				:= wss://blockchain.trackback.dev/
+export IP_WEB						:=$(shell cd terraform/ap-southeast-2 && terraform output -json | jq .info.value.aws_instance_wallet_web )
 all:
 	docker-compose -f ./docker-compose-local.yml up --build --force-recreate --remove-orphans
 
@@ -55,4 +56,7 @@ destroy:
 	cd terraform/ap-southeast-2 && terraform destroy -var="branch_name=$(BRANCH_NAME)" --auto-approve 
 
 deploy: destroy
-	cd terraform/ap-southeast-2 && terraform apply -var="branch_name=$(BRANCH_NAME)" --auto-approve 
+	cd terraform/ap-southeast-2 && terraform apply -var="branch_name=$(BRANCH_NAME)" --auto-approve
+
+remotedeploy:
+	ssh -i ~/.ssh/ec2_key.pem ubuntu@$(IP_WEB) -t 'cd wallet-demo && make run'
