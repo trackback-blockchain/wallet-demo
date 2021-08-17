@@ -93,6 +93,6 @@ resource "aws_lb_target_group_attachment" "aws_tg_attach_wallet_demo" {
 }
 
 output "aws_instance_wallet_web" {
-  value = aws_instance.aws_instance_wallet_web
+  value = aws_instance.aws_instance_wallet_web.public_ip
 }
 
