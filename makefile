@@ -58,5 +58,5 @@ destroy:
 deploy: destroy
 	cd terraform/ap-southeast-2 && terraform apply -var="branch_name=$(BRANCH_NAME)" --auto-approve
 
-remotedeploy:
-	ssh -i ~/.ssh/ec2_key.pem ubuntu@$(IP_WEB) -t 'cd wallet-demo && make run'
+remotedeploy: ecr-login build
+	ssh -i ~/.ssh/ec2_key.pem ubuntu@$(IP_WEB) -t 'cd wallet-demo && make redeploy'
