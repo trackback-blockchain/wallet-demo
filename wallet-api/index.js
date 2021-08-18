@@ -55,6 +55,9 @@ app.post('/api/register', async (req, res) => {
         entitilements: `Class 1 `
     })
 
+    console.log('Test Passport VC:', JSON.stringify(passportVCS))
+    console.log('Test Licence VC:', JSON.stringify(driverLicence))
+
     res.status(200).json({
         publicKey,
         privateKey,
@@ -93,7 +96,10 @@ app.post('/api/vcp', async (req, res) => {
         'type': 'spki',
     });
 
-    const vcp = await VerifiableCredentialUtil.createPresentation(vcs, privateKey, publicKey)
+    const vcp = await VerifiableCredentialUtil.createPresentation(vcs, privateKey, publicKey);
+
+    console.log('Creating VCP')
+    console.log('VCP:', JSON.stringify(vcp))
 
     res.status(200).json({
         vcp
@@ -106,7 +112,7 @@ const server = app.listen(PORT, function () {
     console.log(`SERVER LISTENING ${PORT}`);
 });
 
-console.log('SERVER STARTING');
+console.log('WALLET AGENT SERVER STARTING');
 
 process.on('uncaughtException', function (exception) {
     console.log(exception);
