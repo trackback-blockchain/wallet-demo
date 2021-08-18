@@ -107,12 +107,16 @@ const server = app.listen(PORT, async function () {
           const hex = did_document_hex.substr(2);
           const didJSON = JSON.parse(hexToUtf8(hex));
           console.log(didJSON);
+
         //    console.log(res)
         } else {
           console.log(result);
           setBlock(0);
         }
       });
+
+      let did_doc = {"@context":["https://www.w3.org/ns/did/v1","https://w3id.org/security/suites/ed25519-2020/v1"],"id":"did:trackback.dev:0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3","assertionMethod":[{"id":"did:trackback.dev:dia-0x12345678999","type":"Ed25519VerificationKey2020","controller":"did:trackback.dev:dia-0x1234567890","publicKeyMultibase":"MCowBQYDK2VwAyEAgh8ef957I18rSmje4IMASKPo8XAm+MlDXvGSn6OfQlc="}]};
+      
       
     // *********************************************************************
 
