@@ -12,10 +12,15 @@ import Switch from '@material-ui/core/Switch';
 
 import Button from 'components/inputs/Button';
 
+import { getVcpRequest } from 'reducers/app';
+import { useSelector } from 'react-redux';
+import { getDocumentbyType } from 'reducers/user';
+import { AppState } from 'store';
+
 import './share.scss'
 
 type Props = {
-    accept: (p: { [key: string]: boolean }) => void;
+    accept: (p: any) => void;
     decline: () => void;
 }
 
@@ -24,6 +29,8 @@ const useStyles = makeStyles({
         margin: 22,
         marginBottom: 0,
         minWidth: 275,
+        minHeight: 300,
+
     },
     bullet: {
         display: 'inline-block',
@@ -31,7 +38,7 @@ const useStyles = makeStyles({
         transform: 'scale(0.8)',
     },
     title: {
-        marginTop: '15px',
+        marginTop: '10px',
         // fontSize: 14,
     },
     pos: {
@@ -39,23 +46,56 @@ const useStyles = makeStyles({
     },
 });
 
+function camelCaseToLetter(text: string) {
+    const result = text.replace(/([A-Z])/g, " $1");
+    return result.charAt(0).toUpperCase() + result.slice(1);
+}
 
 function ShareDetails({ accept, decline }: Props) {
     const history = useHistory();
     const classes = useStyles();
+    const vcpRequest = useSelector(getVcpRequest);
 
-    const [shareBloodType, setFull] = useState(true);
+    const type = vcpRequest?.schema?.vc;
+    const properties = vcpRequest?.schema?.properties || {};
+    const required = vcpRequest?.schema?.required || [];
+
+    const keys = Object.keys(properties);
+
+    const doc = useSelector((state: AppState) => getDocumentbyType(state, type));
+
+    const [sharing, setSharing] = useState<{ [key: string]: boolean }>({});
 
     const goback = () => {
         history.goBack();
     }
 
-    const handleChange = () => {
-        setFull(!shareBloodType);
+    const handleChange = (key: string, isSharing: boolean) => {
+        setSharing({ ...sharing, [key]: isSharing })
     }
 
     const onAcceptClick = () => {
-        accept({ givenName: true, familyName: true, bloodType: shareBloodType })
+        const vsMap = keys.map((key) => {
+            const isRequired = required.includes(key);
+
+            const vc = doc?.vcs.partialVCS.find((vc) => {
+
+                if (type === "DigitalPassportCredential") {
+                    return !!vc?.credentialSubject?.passport?.traveller[key];
+                }
+                if (type === "DigitalDriverLicenceCredential") {
+                    return !!vc?.credentialSubject[key];
+                }
+
+                return false;
+            })
+
+            return isRequired ? vc : (sharing[key] ? vc : null)
+        })
+
+        console.log(Object.values(vsMap).filter(a => a !== null))
+
+        accept(Object.values(vsMap).filter(a => a !== null))
     }
 
     return (
@@ -74,40 +114,51 @@ function ShareDetails({ accept, decline }: Props) {
 
 
                 <div className="info">
-                    <div className="info-text">Would you like to share following information?</div>
+                    <div className="info-text">Would you like to share following information from {doc?.name}?</div>
                 </div>
 
             </div>
 
             <Card className={classes.root}>
                 <CardContent>
-                    <Typography className={classes.title} gutterBottom>
 
-                        Given Name
+                    {keys.map((key) => {
 
-                    </Typography>
+                        const isRequired = required.includes(key);
+
+                        const vc = doc?.vcs.partialVCS.find((vc) => {
+                            if (type === "DigitalPassportCredential") {
+                                return !!vc?.credentialSubject?.passport?.traveller[key];
+                            }
+                            if (type === "DigitalDriverLicenceCredential") {
+                                return !!vc?.credentialSubject[key];
+                            }
+                            return false;
+                        })
+                        if (!vc) return <div key={key}></div>
+
+                        return (<div key={key} >
+                            <Typography className={classes.title} gutterBottom >
+
+                                {camelCaseToLetter(key)}
 
 
-                    <Typography className={classes.title} gutterBottom>
+                                {!isRequired && <Switch
 
-                        Family Name
+                                    checked={!!sharing[key]}
+                                    onChange={() => {
+                                        handleChange(key, !sharing[key])
+                                    }}
 
-                    </Typography>
+                                    name={key}
 
+                                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                                />}
 
-                    <Typography className={classes.title}  component="div">
-                        <span>Blood Type</span>
-                        <Switch
+                            </Typography>
+                        </div>)
 
-                            checked={shareBloodType}
-                            onChange={handleChange}
-
-                            name="checkedB"
-
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                        />
-
-                    </Typography>
+                    })}
 
                 </CardContent>
             </Card>

@@ -12,6 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import { getDocumentbyId } from 'reducers/user';
 import { AppState } from 'store';
 
+import { Document } from 'types';
+
 import './details.scss'
 
 const useStyles = makeStyles({
@@ -37,6 +39,49 @@ interface ParamTypes {
     id: string
 }
 
+
+function camelCaseToLetter(text: string) {
+    const result = text.replace(/([A-Z])/g, " $1");
+    return result.charAt(0).toUpperCase() + result.slice(1);
+}
+
+function toFV(obj: { [key: string]: any }) {
+    return Object.keys(obj).map((key: string) => {
+        const value = obj[key];
+        const field = camelCaseToLetter(key);
+
+        if (typeof value !== 'string') {
+            return {
+                field,
+                value: ""
+            }
+        }
+        return {
+            field,
+            value
+        }
+    })
+}
+
+function docParser(doc: Document | undefined) {
+
+    if (!doc) return []
+
+    if (doc.type === "DigitalPassportCredential") {
+        const obj = doc.vcs?.vc?.credentialSubject?.passport?.traveller;
+        return toFV(obj);
+    }
+
+    if (doc.type === "DigitalDriverLicenceCredential") {
+        const obj = doc.vcs?.vc?.credentialSubject;
+        return toFV(obj);
+    }
+
+    return []
+
+}
+
+
 function DocumentDetails() {
     const classes = useStyles();
     const history = useHistory();
@@ -46,6 +91,10 @@ function DocumentDetails() {
     const goback = () => {
         history.goBack();
     }
+
+    const fields = docParser(doc);
+
+
 
     return (
         <div className="container-doc-detail">
@@ -61,45 +110,38 @@ function DocumentDetails() {
 
                 </div>
 
-
-                <div className="title">{doc?.title}</div>
+                <div className="title">{doc?.name}</div>
 
             </div>
+
             <div className="page-container">
                 <Card className={classes.root}>
                     <CardContent>
-                        <Typography className={classes.title} color="textSecondary" gutterBottom>
 
-                            Given Name
+                        {
+                            fields.map(({ field, value }) => {
+                                if(field === 'Id'){
+                                    return <></>
+                                }
+                                return (
+                                    <>
+                                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                                            {field}
+                                        </Typography>
+                                        <Typography variant="h5" component="h2">
+                                            {value}
+                                        </Typography>
+                                    </>
+                                )
+                            })
+                        }
 
-                        </Typography>
-                        <Typography variant="h5" component="h2">
-                            {doc?.vc?.credentialSubject?.passport?.traveller?.givenName}
-                        </Typography>
 
-                        <Typography className={classes.title} color="textSecondary" gutterBottom>
-
-                            Family Name
-
-                        </Typography>
-                        <Typography variant="h5" component="h2">
-                            {doc?.vcFull?.credentialSubject?.passport?.traveller?.familyName}
-                        </Typography>
-
-                        <Typography className={classes.title} color="textSecondary" gutterBottom>
-
-                            Blood Type
-
-                        </Typography>
-                        <Typography variant="h5" component="h2">
-                            {doc?.vcFull?.credentialSubject?.passport?.traveller?.bloodType}
-                        </Typography>
                     </CardContent>
                 </Card>
 
             </div>
         </div>
-
     )
 }
 

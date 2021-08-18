@@ -4,7 +4,8 @@ export type App = {
     loggedIn: boolean,
     socket: string,
     types: any,
-    sharingVCP:boolean;
+    sharingVCP: boolean;
+    vcpRequest:any
 
 }
 
@@ -28,19 +29,19 @@ export type User = {
     documents?: Array<Document>;
     publicKey?: string;
     privateKey?: string;
-    vc?: VerifiableCredential;
-    vcp?: VerifiableCredentialPresentation;
 }
 
+export type VCResponse = {
+    partialVCS: Array<VerifiableCredential>
+    vc: VerifiableCredential
+}
 
 export type Document = {
     id: string;
-    title: string;
-    subTitle: string;
-    vc?: VerifiableCredential;
-    vcp?: VerifiableCredentialPresentation;
-    vcFull?: VerifiableCredential;
-    vcpFull?: VerifiableCredentialPresentation;
+    type: string;
+    name: string;
+    department: string;
+    vcs: VCResponse;
 }
 
 export type DocumentsProps = {
