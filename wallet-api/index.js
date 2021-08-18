@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 const { generateKeyPair } = require('jose/util/generate_key_pair')
 
+const { ApiPromise, WsProvider } = require('@polkadot/api');
+
 const { VerifiableCredentialUtil } = require('./VerifiableCredentialUtil')
 
 const PORT = process.env.PORT || 80;
@@ -16,6 +18,7 @@ app.use(cors());
 app.options('*', cors())
 
 app.get('/api/status', function (req, res) {
+    console.log("Hello World")
     res.status(200).end();
 });
 
@@ -46,7 +49,74 @@ app.post('/api/register', async (req, res) => {
 })
 
 
-const server = app.listen(PORT, function () {
+const server = app.listen(PORT, async function () {
+    console.log("Hello World")
+
+    // *********************************************************************
+    const convert = (from, to) => str => Buffer.from(str, from).toString(to);
+    const hexToUtf8 = convert('hex', 'utf8');
+    const provider = new WsProvider('wss://trackback.dev');
+    const types = {
+        "VerifiableCredential": {
+            "account_id": "AccountId",
+            "public_key": "Vec<8>",
+            "block_time_stamp": "u64",
+            "active": "bool"
+        },
+        "DID": {
+            "did_uri": "Vec<u8>",
+            "did_document": "Vec<u8>",
+            "block_number": "BlockNumber",
+            "block_time_stamp": "u64",
+            "did_ref": "Vec<u8>",
+            "sender_account_id": "AccountId",
+            "active": "Option<bool>"
+        }
+    };
+
+    const rpc = {
+        "didModule": {
+            "dIDDocument": {
+                "description": "Get DID Documnet",
+                "params": [
+                    {
+                        "name": "didDocumentHash",
+                        "type": "Vec<u8>"
+                    }
+                ],
+                "type": "DID"
+            }
+        }
+    };
+
+    const api = await ApiPromise.create({ provider: provider, types, rpc });
+    console.log(api.genesisHash.toHex());
+
+    let didDocumentHash = "0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3";
+
+    api.query.didModule.dIDDocument(didDocumentHash, (result) =>{
+      
+        if (!result.isEmpty){
+          let res = JSON.parse(result);
+        //   console.log(result)
+          let owner = res["sender_account_id"].toString();
+          let block_number = res["block_number"];
+            
+
+          const did_document_hex = res.did_document;
+          const hex = did_document_hex.substr(2);
+          const didJSON = JSON.parse(hexToUtf8(hex));
+          console.log(didJSON);
+        //    console.log(res)
+        } else {
+          console.log(result);
+          setBlock(0);
+        }
+      });
+      
+    // *********************************************************************
+
+
     console.log(`SERVER LISTENING ${PORT}`);
 });
 
