@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { App, VerifiableCredentialPresentation } from 'types';
+import { App } from 'types';
 // @ts-ignore
 import { reactLocalStorage } from 'reactjs-localstorage';
 
@@ -22,11 +22,26 @@ const initState: App = {
 
 export const shareCredentials = createAsyncThunk(
     'users/shareCred',
-    async ({ vcp, url }: { vcp: VerifiableCredentialPresentation, url: string }) => {
-        const response = await client.post(url, { vcp });
+    async ({ vcs, url, privateKey, publicKey }: { vcs: any, url: string, privateKey: string, publicKey: string }) => {
+        const response = await client.post('/api/vcp', { vcs, privateKey, publicKey });
+
+        const vcp = response.vcp;
+
+        const verified = await client.post(url, { vcp });
+        return verified;
+    }
+)
+
+
+export const sendVCPRequest = createAsyncThunk(
+    'users/sendVCPRequest',
+    async ({ url }: { url: string }) => {
+        console.log(url)
+        const response = await client.get(url);
         return response;
     }
 )
+
 
 export const appSlice = createSlice({
     name: 'app',
@@ -42,7 +57,11 @@ export const appSlice = createSlice({
         },
         setVCPIsSharing: (state, action) => {
             state.sharingVCP = action.payload;
-        }
+        },
+        setVcpRequest: (state, action) => {
+            state.vcpRequest = action.payload;
+        },
+
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -55,12 +74,18 @@ export const appSlice = createSlice({
                 console.log(action.payload)
                 state.sharingVCP = false;
             })
+            .addCase(sendVCPRequest.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.vcpRequest = action.payload;
+            })
+
     },
 });
 
-export const { changeInit, changeLoggedIn, setVCPIsSharing } = appSlice.actions;
+export const { changeInit, changeLoggedIn, setVCPIsSharing, setVcpRequest } = appSlice.actions;
 export const isLoggedIn = (state: AppState) => state.app.loggedIn;
 export const isSharingVCP = (state: AppState) => state.app.sharingVCP;
+export const getVcpRequest = (state: AppState) => state.app.vcpRequest;
 export const isInit = (state: AppState) => state.app.init;
 
 export default appSlice.reducer;

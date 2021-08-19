@@ -60,16 +60,11 @@ export const userSlice = createSlice({
         builder
             .addCase(register.fulfilled, (state, action) => {
                 console.log(action.payload)
-                state.documents = [{
-                    id: '1',
-                    title: "New Zealand Passport",
-                    subTitle: "Department of Internal Affairs",
-                    vc: action.payload.vc,
-                    vcp: action.payload.vcp,
-                    vcFull: action.payload.vcFull,
-                    vcpFull: action.payload.vcpFull,
-                }]
-                reactLocalStorage.setObject(IDENTIFIER, { ...state, ...action.payload });
+                state.documents = [...action.payload.vcs]
+                state.publicKey = action.payload.publicKey;
+                state.privateKey = action.payload.privateKey;
+
+                reactLocalStorage.setObject(IDENTIFIER, { ...state });
             })
     },
 });
@@ -78,6 +73,8 @@ export const { updateUserData } = userSlice.actions;
 export const isLoggedIn = (state: AppState) => state.user.email.length > 0 && !!state.user.password;
 export const getUser = (state: AppState) => state.user;
 export const getDocuments = (state: AppState) => state.user.documents;
-export const getDocumentbyId = (state: AppState, id: string) => state.user.documents?.find(k => k.id === id);
+export const getDocumentbyId = (state: AppState, id: string) => state.user.documents?.find(k => `${k.id}` === id);
+export const getDocumentbyType = (state: AppState, id: string) => state.user.documents?.find(k => `${k.type}` === id);
+export const getKeys = (state: AppState) => { const { publicKey, privateKey } = state.user; return { publicKey, privateKey } };
 
 export default userSlice.reducer;

@@ -11,7 +11,7 @@ type parms = {
     onClick: (id: string) => void;
 } & Document
 
-function DocumentContainer({ id, title, subTitle, onClick: onclick }: parms) {
+function DocumentContainer({ id, name, department, onClick: onclick }: parms) {
 
     const onClick = () => {
         onclick(id);
@@ -25,6 +25,7 @@ function DocumentContainer({ id, title, subTitle, onClick: onclick }: parms) {
             height: 94px;
             display:flex;
             padding:24px;
+            margin-top:10px;
 
             `} onClick={onClick}>
 
@@ -51,7 +52,7 @@ function DocumentContainer({ id, title, subTitle, onClick: onclick }: parms) {
                     color: #333333;
                     
                     
-                    `}>{title}</div>
+                    `}>{name}</div>
 
                 <div css={css`
                     font-weight: 600;
@@ -64,7 +65,7 @@ function DocumentContainer({ id, title, subTitle, onClick: onclick }: parms) {
                     color: #828282;
                         
                     
-                    `}>{subTitle}</div>
+                    `}>{department}</div>
             </div>
 
         </div>)

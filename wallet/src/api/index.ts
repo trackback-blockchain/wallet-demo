@@ -19,7 +19,9 @@ export async function client(endpoint: string, { body, ...customConfig }: { [key
     let data
     try {
         const API_HOST = process.env.API_HOST || 'https://wallet.trackback.dev';
+        // const API_HOST = process.env.API_HOST || 'http://localhost:8080';
         const url = (endpoint.indexOf('http') >= 0) ? endpoint : `${API_HOST}${endpoint}`;
+
         const response = await fetch(url, config)
         data = await response.json()
         if (response.ok) {

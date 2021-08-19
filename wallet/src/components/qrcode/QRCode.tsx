@@ -9,8 +9,8 @@ import QrReader from 'react-qr-reader'
 import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
-import { isSharingVCP, setVCPIsSharing, shareCredentials } from 'reducers/app';
-import { getDocuments } from 'reducers/user';
+import { sendVCPRequest, getVcpRequest, isSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
+import { getKeys } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
@@ -29,11 +29,13 @@ const MODES_END = 'MODES_END';
 function QRCode() {
 
     const [mode, setMode] = useState<string>(MODES_QR);
-    const [url, setUrl] = useState('');
-    const dispatch = useDispatch();
-    const documents = useSelector(getDocuments);
-    const isSharing = useSelector(isSharingVCP);
 
+    const dispatch = useDispatch();
+
+    const isSharing = useSelector(isSharingVCP);
+    const vcpRequest = useSelector(getVcpRequest);
+
+    const { publicKey, privateKey } = useSelector(getKeys);
 
     useEffect(() => {
 
@@ -43,12 +45,18 @@ function QRCode() {
 
     }, [isSharing, mode]);
 
+    useEffect(() => {
+
+        if (vcpRequest) {
+            setMode(MODES_QUESTION)
+        }
+
+    }, [vcpRequest]);
+
     const handleScan = async (data: any) => {
 
-        setUrl(data);
-
         if (validateUrl(data)) {
-            setMode(MODES_QUESTION);
+            dispatch(sendVCPRequest({ url: data }));
         }
     }
 
@@ -56,24 +64,17 @@ function QRCode() {
         console.error(err)
     }
 
-    const shareAccess = (sharing: { [key: string]: boolean }) => {
-        if (!documents) {
+    const shareAccess = (vcs: any) => {
+        if (!vcs || vcs.length === 0) {
             setMode(MODES_QR);
             return;
         };
 
-        const doc = documents[0];
+        setMode(MODES_SHARING);
+        dispatch(setVCPIsSharing(true));
+        dispatch(shareCredentials({ vcs, url: vcpRequest.publishUrl, publicKey: publicKey!, privateKey: privateKey! }));
 
-        if (validateUrl(url)) {
-            dispatch(setVCPIsSharing(true));
 
-            const vcp = sharing.bloodType ? doc.vcpFull : doc.vcp;
-
-            if (!vcp) return;
-            setMode(MODES_SHARING);
-
-            dispatch(shareCredentials({ vcp, url }))
-        }
     }
 
     const decline = () => {
