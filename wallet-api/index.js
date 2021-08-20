@@ -11,6 +11,7 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { VerifiableCredentialUtil, generateUnique } = require('./VerifiableCredentialUtil');
 const blake2AsHex = require('@polkadot/util-crypto');
 const { v4: uuidv4 } = require('uuid');
+var str2ab = require('string-to-arraybuffer')
 // const utils = require('./utils');
 // import utils from '../utils';
 
@@ -251,25 +252,40 @@ const server = app.listen(PORT, async function () {
         new Uint8Array(didDocument))
         .map((b) => b.toString(16).padStart(2, '0'))
         .join('');
+
+      //**************************************************************************************** */
+      var binaryArray = str2ab(JSON.stringify(didDocument) )
+     var p =  Array.from(new Uint8Array(binaryArray))
+      // let a = JSON.stringify(didDocument);
+      // console.log(a)
+      // let binaryArray = new Uint8Array(a.length)
+      // Array.prototype.forEach.call(binaryArray, function (el, idx, arr) { arr[idx] = a.charCodeAt(idx) })
+      // console.log(binaryArray)
+      // console.log(binaryArray.length)
+
+
+
+      // let js = JSON.stringify(didDocument);
+      // console.log(js)
+      // console.log(typeof js)
+      // let uDIDDoc = Uint8Array.from(didDocument, x => x.charCodeAt(0))
+      // console.log(uDIDDoc.lengt)
+      // console.log(uDIDDoc)
+      //***************************************************************************************** */
       
       const didKey = blake2AsHex.blake2AsHex("trackback.dev").substring(0,8) + "-" + uuidv4();
-        // console.log(didKey);
+      console.log("*************************************\n"+didKey+"\n*************************************");
 
       let didHash = blake2AsHex.blake2AsHex(didDocumentHex);
       let palletRpc = "didModule";
       let callable = "insertDidDocument";
-      // let inputParams = [Buffer.from(JSON.stringify(didDocument)), didKey];
-      let inputParams = [didKey, didKey];
-      let paramFields = [true, true];
 
-      // Buffer.from(JSON.stringify(didDocument));
+      let inputParams = [p, didKey];
+      let paramFields = [true, true];
 
       const keyring = new Keyring({ type: 'sr25519' });
 
-      // Add Alice to our keyring with a hard-deived path (empty phrase, so uses dev)
       const alice = keyring.addFromUri('//Alice');
-
-
 
       const transformParams = (paramFields, inputParams, opts = { emptyAsNull: true }) => {
         const paramVal = inputParams.map(inputParam => {
@@ -304,10 +320,10 @@ const server = app.listen(PORT, async function () {
         }, []);
       };
       const transformed = transformParams(paramFields, inputParams);
-      console.log(...transformed)
+      // console.log(...transformed)
 
       if(transformed){
-        console.log("transformed")
+        // console.log("transformed")
         
          const tt = async() => {
         
