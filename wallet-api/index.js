@@ -11,6 +11,16 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { VerifiableCredentialUtil, generateUnique } = require('./VerifiableCredentialUtil');
 const blake2AsHex = require('@polkadot/util-crypto');
 const { v4: uuidv4 } = require('uuid');
+// const utils = require('./utils');
+// import utils from '../utils';
+
+// const web3FromSource =  require('@polkadot/extension-dapp');
+// const jsonrpc =  require('@polkadot/types/interfaces/jsonrpc');
+
+
+// const { web3Accounts, web3Enable } = require('@polkadot/extension-dapp');
+const { Keyring } = require('@polkadot/keyring');
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -106,13 +116,76 @@ app.post('/api/vcp', async (req, res) => {
 
 });
 
+// *************************************************************************************
+const signedTx = async () => {
+    const fromAcct = await getFromAcct();
+    const transformed = transformParams(paramFields, inputParams);
+    // transformed can be empty parameters
 
+    const txExecute = transformed ? api.tx[palletRpc][callable](...transformed): api.tx[palletRpc][callable]();
+
+    await txExecute.signAndSend(fromAcct, txResHandler)
+
+  };
+
+const transformParams = (paramFields, inputParams, opts = { emptyAsNull: true }) => {
+    // if `opts.emptyAsNull` is true, empty param value will be added to res as `null`.
+    //   Otherwise, it will not be added
+    const paramVal = inputParams.map(inputParam => {
+      // To cater the js quirk that `null` is a type of `object`.
+      if (typeof inputParam === 'object' && inputParam !== null && typeof inputParam.value === 'string') {
+        return inputParam.value.trim();
+      } else if (typeof inputParam === 'string') {
+        return inputParam.trim();
+      }
+      return inputParam;
+    });
+    const params = paramFields.map((field, ind) => ({ ...field, value: paramVal[ind] || null }));
+
+    return params.reduce((memo, { type = 'string', value }) => {
+      if (value == null || value === '') return (opts.emptyAsNull ? [...memo, null] : memo);
+
+      let converted = value;
+
+      // Deal with a vector
+      if (type.indexOf('Vec<') >= 0) {
+        converted = converted.split(',').map(e => e.trim());
+        converted = converted.map(single => isNumType(type)
+          ? (single.indexOf('.') >= 0 ? Number.parseFloat(single) : Number.parseInt(single))
+          : single
+        );
+        return [...memo, converted];
+      }
+
+      // Deal with a single value
+      if (isNumType(type)) {
+        converted = converted.indexOf('.') >= 0 ? Number.parseFloat(converted) : Number.parseInt(converted);
+      }
+      return [...memo, converted];
+    }, []);
+  };
+  const utils = {
+    paramConversion: {
+      num: [
+        'Compact<Balance>',
+        'BalanceOf',
+        'u8', 'u16', 'u32', 'u64', 'u128',
+        'i8', 'i16', 'i32', 'i64', 'i128'
+      ]
+    }
+  };
+
+  const isNumType = type =>
+  utils.paramConversion.num.some(el => type.indexOf(el) >= 0);
+
+// *************************************************************************************
 const server = app.listen(PORT, async function () {
 
     // *********************************************************************
     const convert = (from, to) => str => Buffer.from(str, from).toString(to);
     const hexToUtf8 = convert('hex', 'utf8');
-    const provider = new WsProvider('wss://trackback.dev');
+    // const provider = new WsProvider('wss://trackback.dev');
+    const provider = new WsProvider('ws://127.0.0.1:9944');
     const types = {
         "VerifiableCredential": {
             "account_id": "AccountId",
@@ -147,7 +220,7 @@ const server = app.listen(PORT, async function () {
     };
 
     const api = await ApiPromise.create({ provider: provider, types, rpc });
-    console.log(api.genesisHash.toHex());
+    // console.log(api.genesisHash.toHex());
 
     let didDocumentHash = "0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3";
 
@@ -163,12 +236,12 @@ const server = app.listen(PORT, async function () {
           const did_document_hex = res.did_document;
           const hex = did_document_hex.substr(2);
           const didJSON = JSON.parse(hexToUtf8(hex));
-          console.log(didJSON);
+          // console.log(didJSON);
 
         //    console.log(res)
         } else {
           console.log(result);
-          setBlock(0);
+           
         }
       });
 
@@ -180,13 +253,92 @@ const server = app.listen(PORT, async function () {
         .join('');
       
       const didKey = blake2AsHex.blake2AsHex("trackback.dev").substring(0,8) + "-" + uuidv4();
-        console.log(didKey);
+        // console.log(didKey);
 
       let didHash = blake2AsHex.blake2AsHex(didDocumentHex);
       let palletRpc = "didModule";
       let callable = "insertDidDocument";
-      let inputParams = [didDocument, didKey];
+      // let inputParams = [Buffer.from(JSON.stringify(didDocument)), didKey];
+      let inputParams = [didKey, didKey];
       let paramFields = [true, true];
+
+      // Buffer.from(JSON.stringify(didDocument));
+
+      const keyring = new Keyring({ type: 'sr25519' });
+
+      // Add Alice to our keyring with a hard-deived path (empty phrase, so uses dev)
+      const alice = keyring.addFromUri('//Alice');
+
+
+
+      const transformParams = (paramFields, inputParams, opts = { emptyAsNull: true }) => {
+        const paramVal = inputParams.map(inputParam => {
+          if (typeof inputParam === 'object' && inputParam !== null && typeof inputParam.value === 'string') {
+            return inputParam.value.trim();
+          } else if (typeof inputParam === 'string') {
+            return inputParam.trim();
+          }
+          return inputParam;
+        });
+        const params = paramFields.map((field, ind) => ({ ...field, value: paramVal[ind] || null }));
+    
+        return params.reduce((memo, { type = 'string', value }) => {
+          if (value == null || value === '') return (opts.emptyAsNull ? [...memo, null] : memo);
+    
+          let converted = value;
+
+          if (type.indexOf('Vec<') >= 0) {
+            converted = converted.split(',').map(e => e.trim());
+            converted = converted.map(single => isNumType(type)
+              ? (single.indexOf('.') >= 0 ? Number.parseFloat(single) : Number.parseInt(single))
+              : single
+            );
+            return [...memo, converted];
+          }
+    
+          // Deal with a single value
+          if (isNumType(type)) {
+            converted = converted.indexOf('.') >= 0 ? Number.parseFloat(converted) : Number.parseInt(converted);
+          }
+          return [...memo, converted];
+        }, []);
+      };
+      const transformed = transformParams(paramFields, inputParams);
+      console.log(...transformed)
+
+      if(transformed){
+        console.log("transformed")
+        
+         const tt = async() => {
+        
+          const txExecute = api.tx[palletRpc][callable](...transformed);
+          await txExecute.signAndSend(alice, (result)=> {
+
+            console.log(`Current status is ${result.status}`);
+
+            if (result.status.isInBlock) {
+              console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
+            } else if (result.status.isFinalized) {
+              console.log(`Transaction finalized at blockHash ${result.status.asFinalized}`);
+            }
+          }
+          )
+      }
+      await tt();
+      } else {
+        console.log("error")
+        const txExecute =api.tx[palletRpc][callable]();
+      }
+      // const txExecute = transformed ? api.tx[palletRpc][callable](...transformed): api.tx[palletRpc][callable]();
+      // Create a extrinsic, transferring 12345 units to Bob
+      // console.log(api.query[didModule])
+      // await api.query[palletRpc][callable]
+      // const transfer = api.query.didModule.dIDDocument.insertDidDocument(didDocument, didKey);
+    
+      // // Sign and send the transaction using our account
+      // const hash = await transfer.signAndSend(alice);
+    
+
     
     // *********************************************************************
 
