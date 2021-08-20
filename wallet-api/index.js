@@ -117,6 +117,25 @@ app.post('/api/vcp', async (req, res) => {
 
 });
 
+
+app.post('/api/v1/did', async (req, res) => {
+  let account = req.body.account;
+  let did_uri = "did"+ ":" + blake2AsHex.blake2AsHex("trackback.dev").substring(0,8) + ":" + uuidv4();
+  let didDocument = {"@context":["https://www.w3.org/ns/did/v1","https://w3id.org/security/suites/ed25519-2020/v1"],"id":`${did_uri}`,"assertionMethod":[{"id":"did:trackback.dev:dia-0x12345678999","type":"Ed25519VerificationKey2020","controller":"did:trackback.dev:dia-0x1234567890","publicKeyMultibase":"MCowBQYDK2VwAyEAgh8ef957I18rSmje4IMASKPo8XAm+MlDXvGSn6OfQlc="}]};
+  binaryArray =  Array.from(new Uint8Array(str2ab(JSON.stringify(didDocument))));
+
+  let palletRpc = "didModule";
+  let callable = "insertDidDocument";
+
+  let inputParams = [p, didKey];
+  let paramFields = [true, true];
+
+  const keyring = new Keyring({ type: 'sr25519' });
+
+  const account = keyring.addFromUri(`//${account}`);
+
+});
+
 // *************************************************************************************
 const signedTx = async () => {
     const fromAcct = await getFromAcct();
@@ -254,23 +273,8 @@ const server = app.listen(PORT, async function () {
         .join('');
 
       //**************************************************************************************** */
-      var binaryArray = str2ab(JSON.stringify(didDocument) )
+     var binaryArray = str2ab(JSON.stringify(didDocument) )
      var p =  Array.from(new Uint8Array(binaryArray))
-      // let a = JSON.stringify(didDocument);
-      // console.log(a)
-      // let binaryArray = new Uint8Array(a.length)
-      // Array.prototype.forEach.call(binaryArray, function (el, idx, arr) { arr[idx] = a.charCodeAt(idx) })
-      // console.log(binaryArray)
-      // console.log(binaryArray.length)
-
-
-
-      // let js = JSON.stringify(didDocument);
-      // console.log(js)
-      // console.log(typeof js)
-      // let uDIDDoc = Uint8Array.from(didDocument, x => x.charCodeAt(0))
-      // console.log(uDIDDoc.lengt)
-      // console.log(uDIDDoc)
       //***************************************************************************************** */
       
       const didKey = blake2AsHex.blake2AsHex("trackback.dev").substring(0,8) + "-" + uuidv4();
@@ -345,20 +349,8 @@ const server = app.listen(PORT, async function () {
         console.log("error")
         const txExecute =api.tx[palletRpc][callable]();
       }
-      // const txExecute = transformed ? api.tx[palletRpc][callable](...transformed): api.tx[palletRpc][callable]();
-      // Create a extrinsic, transferring 12345 units to Bob
-      // console.log(api.query[didModule])
-      // await api.query[palletRpc][callable]
-      // const transfer = api.query.didModule.dIDDocument.insertDidDocument(didDocument, didKey);
-    
-      // // Sign and send the transaction using our account
-      // const hash = await transfer.signAndSend(alice);
-    
 
-    
     // *********************************************************************
-
-
     console.log(`SERVER LISTENING ${PORT}`);
 });
 
