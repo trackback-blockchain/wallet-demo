@@ -68,11 +68,12 @@ export const appSlice = createSlice({
         builder
             .addCase(shareCredentials.fulfilled, (state, action) => {
                 console.log(action.payload)
-                state.sharingVCP = false;
+                state.sharingVCP = 'fulfilled';
             })
             .addCase(shareCredentials.rejected, (state, action) => {
                 console.log(action.payload)
-                state.sharingVCP = false;
+                state.sharingVCP = 'rejected';
+                state.vcpRequest = null;
             })
             .addCase(sendVCPRequest.fulfilled, (state, action) => {
                 console.log(action.payload)
@@ -84,7 +85,7 @@ export const appSlice = createSlice({
 
 export const { changeInit, changeLoggedIn, setVCPIsSharing, setVcpRequest } = appSlice.actions;
 export const isLoggedIn = (state: AppState) => state.app.loggedIn;
-export const isSharingVCP = (state: AppState) => state.app.sharingVCP;
+export const getSharingVCP = (state: AppState) => state.app.sharingVCP;
 export const getVcpRequest = (state: AppState) => state.app.vcpRequest;
 export const isInit = (state: AppState) => state.app.init;
 

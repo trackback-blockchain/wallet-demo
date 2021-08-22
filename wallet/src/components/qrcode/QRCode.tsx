@@ -9,11 +9,13 @@ import QrReader from 'react-qr-reader'
 import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
-import { sendVCPRequest, getVcpRequest, isSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
+import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
 import { getKeys } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
+import ShareDetailsFailed from 'components/shareDetails/ShareDetailsFailed';
+import GenerateVCP from 'components/shareDetails/GenerateVCP';
 
 import './qrcode.scss';
 
@@ -25,6 +27,8 @@ const MODES_QR = 'MODES_QR';
 const MODES_QUESTION = 'MODES_QUESTION';
 const MODES_SHARING = 'MODES_SHARING';
 const MODES_END = 'MODES_END';
+const MODES_FAILED = 'MODES_FAILED';
+const MODES_PROCESSING = 'MODES_PROCESSING';
 
 function QRCode() {
 
@@ -32,18 +36,21 @@ function QRCode() {
 
     const dispatch = useDispatch();
 
-    const isSharing = useSelector(isSharingVCP);
+    const sharingVCP = useSelector(getSharingVCP);
     const vcpRequest = useSelector(getVcpRequest);
 
     const { publicKey, privateKey } = useSelector(getKeys);
 
     useEffect(() => {
 
-        if (!isSharing && mode === MODES_SHARING) {
+        if (sharingVCP === 'fulfilled' && mode === MODES_SHARING) {
             setMode(MODES_END)
         }
+        if (sharingVCP === 'rejected' && mode === MODES_SHARING) {
+            setMode(MODES_FAILED)
+        }
 
-    }, [isSharing, mode]);
+    }, [sharingVCP, mode]);
 
     useEffect(() => {
 
@@ -55,8 +62,11 @@ function QRCode() {
 
     const handleScan = async (data: any) => {
 
-        if (validateUrl(data)) {
-            dispatch(sendVCPRequest({ url: data }));
+        const url = (data || '').replaceAll("https://wallet.trackback.dev?r=", "")
+
+        if (validateUrl(url)) {
+            setMode(MODES_PROCESSING)
+            dispatch(sendVCPRequest({ url }));
         }
     }
 
@@ -94,8 +104,16 @@ function QRCode() {
         return <SharingAccess />
     }
 
+    if (mode === MODES_PROCESSING) {
+        return <GenerateVCP />
+    }
+
     if (mode === MODES_END) {
         return <ShareDetailsSuccess accept={sharingSuccess} />
+    }
+
+    if (mode === MODES_FAILED) {
+        return <ShareDetailsFailed accept={sharingSuccess} />
     }
 
     return (

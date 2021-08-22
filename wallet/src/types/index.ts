@@ -4,7 +4,7 @@ export type App = {
     loggedIn: boolean,
     socket: string,
     types: any,
-    sharingVCP: boolean;
+    sharingVCP: string;
     vcpRequest:any
 
 }

@@ -4,6 +4,12 @@ services:
     image: 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com/wallet-api:latest 
     environment: 
       PORT: 80
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: wallet
+        awslogs-region: ap-southeast-2
+        awslogs-stream: wallet-agent-latest
   wallet:
     image: 533545012068.dkr.ecr.ap-southeast-2.amazonaws.com/wallet:latest 
     environment: 
