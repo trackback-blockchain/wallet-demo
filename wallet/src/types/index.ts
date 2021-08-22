@@ -42,6 +42,7 @@ export type Document = {
     name: string;
     department: string;
     vcs: VCResponse;
+    didUri?: string;
 }
 
 export type DocumentsProps = {

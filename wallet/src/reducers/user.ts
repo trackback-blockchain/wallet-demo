@@ -63,7 +63,7 @@ export const userSlice = createSlice({
                 state.documents = [...action.payload.vcs]
                 state.publicKey = action.payload.publicKey;
                 state.privateKey = action.payload.privateKey;
-
+                 
                 reactLocalStorage.setObject(IDENTIFIER, { ...state });
             })
     },

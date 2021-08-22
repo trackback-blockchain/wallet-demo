@@ -120,7 +120,7 @@ function DocumentDetails() {
 
                         {
                             fields.map(({ field, value }) => {
-                                if(field === 'Id'){
+                                if (field === 'Id') {
                                     return <></>
                                 }
                                 return (
@@ -136,6 +136,10 @@ function DocumentDetails() {
                             })
                         }
 
+
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                            {doc?.didUri}
+                        </Typography>
 
                     </CardContent>
                 </Card>
