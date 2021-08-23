@@ -68,7 +68,7 @@ export const appSlice = createSlice({
         builder
             .addCase(shareCredentials.fulfilled, (state, action) => {
                 console.log(action.payload)
-                state.sharingVCP = 'fulfilled';
+                state.sharingVCP = action.payload?.result?.verfied ? 'fulfilled' : 'rejected';
             })
             .addCase(shareCredentials.rejected, (state, action) => {
                 console.log(action.payload)
