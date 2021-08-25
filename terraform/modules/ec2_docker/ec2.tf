@@ -41,7 +41,7 @@ resource "aws_instance" "aws_instance_wallet_web" {
   iam_instance_profile        = aws_iam_instance_profile.aws_iam_instance_profile_wallet_profile.id
 
   tags = {
-    Name = "aws_instance_wallet_web"
+    Name = "aws_ins_web wallet"
   }
 
   root_block_device {
