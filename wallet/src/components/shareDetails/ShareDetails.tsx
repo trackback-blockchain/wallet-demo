@@ -86,6 +86,9 @@ function ShareDetails({ accept, decline }: Props) {
                 if (type === "DigitalDriverLicenceCredential") {
                     return !!vc?.credentialSubject[key];
                 }
+                if (type === "DigitalDriverLicenceCredentialTrackback") {
+                    return !!vc?.credentialSubject[key];
+                }
 
                 return false;
             })
@@ -131,6 +134,9 @@ function ShareDetails({ accept, decline }: Props) {
                                 return !!vc?.credentialSubject?.passport?.traveller[key];
                             }
                             if (type === "DigitalDriverLicenceCredential") {
+                                return !!vc?.credentialSubject[key];
+                            }
+                            if (type === "DigitalDriverLicenceCredentialTrackback") {
                                 return !!vc?.credentialSubject[key];
                             }
                             return false;
