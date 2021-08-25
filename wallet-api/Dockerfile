@@ -1,17 +1,15 @@
-FROM mhart/alpine-node:15 as base
+FROM mhart/alpine-node:16 as build-deps
+RUN apk add --no-cache git
+RUN apk add --no-cache python2
+RUN apk add --no-cache make
 
-# required for docker health check.
-RUN apk add curl
+WORKDIR /usr/src/app
 
-RUN mkdir -p /var/www/app
-RUN chmod 777 /var/www/app
-WORKDIR /var/www/app/
+COPY package.json yarn.lock ./
+
+RUN yarn install
+
 COPY . .
-RUN npm install
-
-# HEALTHCHECK migrated to ecs-params file
-# HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-#     cmd curl --fail http://localhost:80/status || exit 1   
 
 CMD ["node", "index.js"]
 EXPOSE 80

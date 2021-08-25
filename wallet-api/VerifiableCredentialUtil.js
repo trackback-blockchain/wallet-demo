@@ -7,8 +7,7 @@ function generateUnique() {
 
 class VerifiableCredentialUtil {
 
-  async createPassportVC({ surname, givenNames, nationality, dateOfBirth, dateOfIssue, dateOfExpiry, passportNumber, bloodType }) {
-
+  async createPassportVC({ surname, givenNames, nationality, dateOfBirth, dateOfIssue, dateOfExpiry, passportNumber, bloodType, didUri }) {
 
     const traveller = {
       "givenNames": givenNames,
@@ -21,7 +20,6 @@ class VerifiableCredentialUtil {
       bloodType
     }
 
-
     const passport = {
       "id": `did:trackback.dev:${generateUnique()}`,
       "type": "DigitalPassport",
@@ -31,7 +29,7 @@ class VerifiableCredentialUtil {
       "type": [
         "DigitalPassport"
       ],
-      "id": `did:trackback.dev:0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3`,
+      "id": didUri,
     }
 
     const baseCredential = {
@@ -61,20 +59,20 @@ class VerifiableCredentialUtil {
     const vcsPromises = Object.keys(traveller).map(async (key) => {
       const _vc = { ...baseCredential, credentialSubject: { ...baseClaim, passport: { ...passport, traveller: { [key]: traveller[key] } } } };
 
-      const vc = await this.addProof(_vc, privateKey);
+      const vc = await this.addProof(_vc, privateKey, didUri);
       return vc;
 
     });
 
     const vcs = await Promise.all(vcsPromises)
 
-    const fullvc = await this.addProof(_vc2, privateKey);
+    const fullvc = await this.addProof(_vc2, privateKey, didUri);
 
     return { partialVCS: [...vcs], vc: fullvc }
   }
 
 
-  async createDrivingLicenseVCS({ firstNames, surname, dateOfBirth, licence, version, entitilements = [], dateOfExpiry }) {
+  async createDrivingLicenseVCS({ firstNames, surname, dateOfBirth, licence, version, entitilements = [], dateOfExpiry, didUri }) {
 
     const shareableVC = {
       licence,
@@ -87,7 +85,7 @@ class VerifiableCredentialUtil {
     }
 
     const baseClaim = {
-      "id": `did:trackback.dev:nzdia-licence-${licence}`,
+      "id": didUri,
     }
 
     const baseCredential = {
@@ -112,26 +110,26 @@ class VerifiableCredentialUtil {
     const vcsPromises = Object.keys(shareableVC).map(async (key) => {
       const _vc = { ...baseCredential }
       Object.assign(_vc, { credentialSubject: { ...baseClaim, [key]: shareableVC[key] } })
-      const vc = await this.addProof(_vc, privateKey);
+      const vc = await this.addProof(_vc, privateKey, didUri);
       return vc;
     });
 
     const _fvc = { ...baseCredential }
     Object.assign(_fvc, { credentialSubject: { ...baseClaim, ...shareableVC } })
-    const fullvc = await this.addProof(_fvc, privateKey);
+    const fullvc = await this.addProof(_fvc, privateKey, didUri);
 
     const vcs = await Promise.all(vcsPromises)
     return { partialVCS: [...vcs], vc: fullvc }
 
   }
 
-  async addProof(vc, privateKey) {
+  async addProof(vc, privateKey, didUri) {
     try {
       const jsonstr = JSON.stringify(vc);
 
       const hash = createHash('sha256').update(jsonstr).digest('base64');
 
-      const proof = await this.createProof(hash, privateKey);
+      const proof = await this.createProof(hash, privateKey, didUri);
 
       Object.assign(vc, { proof: { ...proof } })
 
@@ -142,7 +140,7 @@ class VerifiableCredentialUtil {
   }
 
 
-  async createProof(jsonstr, privateKey) {
+  async createProof(jsonstr, privateKey, didUri) {
     const encoder = new TextEncoder();
 
     const jws_compact = await new CompactSign(encoder.encode(jsonstr))
@@ -152,7 +150,7 @@ class VerifiableCredentialUtil {
     const proof = {
       "type": "Ed25519Signature2020",
       "created": new Date().toISOString(),
-      "verificationMethod": "did:trackback.dev:0x2a674c8ef2bc79f13faf22d4165ac99efc2cabe6e3194c0a58336fed7c56b1b3",
+      "verificationMethod": didUri,
       "proofPurpose": "assertionMethod",
       "proofValue": jws_compact.toString()
     }
@@ -174,8 +172,8 @@ class VerifiableCredentialUtil {
 
     const hash = createHash('sha256').update(JSON.stringify(presentation)).digest('base64');
 
-    const proof = await this.createProof(hash, privateKey);
-    proof.verificationMethod = `did:trackback.dev-presentation:${generateUnique()}#${pubkeyHex}`
+    const didUri = `did:trackback.dev-presentation:${generateUnique()}#${pubkeyHex}`
+    const proof = await this.createProof(hash, privateKey, didUri);
 
     Object.assign(presentation, { proof: { ...proof } })
 

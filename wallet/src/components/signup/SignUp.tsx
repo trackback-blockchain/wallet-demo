@@ -20,12 +20,14 @@ import { ROUTE_SUCCESS } from '../../constants';
 
 import { css } from '@emotion/react';
 import './signup.scss'
+import Loading from './Loading';
 
 
 function SignUp() {
 
     const history = useHistory();
     const dispatch = useDispatch();
+    const [mode, setMode] = useState('')
 
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -52,10 +54,13 @@ function SignUp() {
         }
 
         const hash = CryptoJS.SHA256(password);
+        setMode('loading')
 
         await dispatch(updateUserData({ name, lastName, email, password: hash.toString(CryptoJS.enc.Base64) }));
         await dispatch(register({ name, lastName }));
         await dispatch(changeLoggedIn(true));
+
+        setMode('')
 
         history.push(ROUTE_SUCCESS);
     };
@@ -64,7 +69,9 @@ function SignUp() {
         history.goBack();
     }
 
-
+    if (mode !== "") {
+        return <Loading />
+    }
 
     return (
         <div className="container-signup">

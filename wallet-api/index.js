@@ -8,6 +8,11 @@ const { generateKeyPair } = require('jose/util/generate_key_pair')
 
 const { VerifiableCredentialUtil, generateUnique } = require('./VerifiableCredentialUtil');
 
+const { Keyring } = require('@polkadot/keyring');
+
+const { TrackBackAgent } = require('./TrackBackAgent');
+
+
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -34,6 +39,16 @@ app.post('/api/register', async (req, res) => {
     const DATE_FORMAT = "YYYY-MM-DDThh:mm:ss"
     const DATE_FORMAT_SIMPLE = "YYYY-MM-DD"
 
+    await TrackBackAgent.connect();
+
+    // Create a keyring instance
+    const keyring = new Keyring({ type: 'sr25519' });
+    const alice = keyring.addFromUri('//Alice');
+
+    const didPassport = TrackBackAgent.createDID();
+
+    await TrackBackAgent.addDidToChain(alice, didPassport.didDocument, didPassport.did_uri)
+
     const passportVCS = await VerifiableCredentialUtil.createPassportVC({
         surname: lastName,
         givenNames: name,
@@ -42,8 +57,13 @@ app.post('/api/register', async (req, res) => {
         dateOfIssue: moment().format(DATE_FORMAT_SIMPLE),
         dateOfExpiry: "2028-01-01",
         passportNumber: generateUnique().toUpperCase(),
-        bloodType
+        bloodType,
+        didUri: didPassport.did_uri
     });
+
+    const didLicence = TrackBackAgent.createDID();
+
+    await TrackBackAgent.addDidToChain(alice, didLicence.didDocument, didLicence.did_uri)
 
     const driverLicence = await VerifiableCredentialUtil.createDrivingLicenseVCS({
         firstNames: name,
@@ -52,7 +72,8 @@ app.post('/api/register', async (req, res) => {
         licence: generateUnique().toUpperCase(),
         version: "234",
         dateOfExpiry: "2028-01-01",
-        entitilements: `Class 1 `
+        entitilements: `Class 1 `,
+        didUri: didLicence.did_uri
     })
 
     console.log('Test Passport VC:', JSON.stringify(passportVCS))
@@ -67,14 +88,16 @@ app.post('/api/register', async (req, res) => {
                 type: "DigitalPassportCredential",
                 name: "New Zealand Passport",
                 department: "Department of Internal Affairs",
-                vcs: passportVCS
+                vcs: passportVCS,
+                didUri: didPassport.did_uri
             },
             {
                 id: 2,
                 type: "DigitalDriverLicenceCredential",
                 name: "New Zealand Driver Licence",
                 department: "",
-                vcs: driverLicence
+                vcs: driverLicence,
+                didUri: didLicence.did_uri
             }
         ]
     })
@@ -106,9 +129,7 @@ app.post('/api/vcp', async (req, res) => {
     });
 
 });
-
-
-const server = app.listen(PORT, function () {
+const server = app.listen(PORT, async function () {
     console.log(`SERVER LISTENING ${PORT}`);
 });
 
