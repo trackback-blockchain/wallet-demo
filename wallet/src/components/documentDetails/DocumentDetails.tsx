@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import { CardMedia } from '@material-ui/core';
 
 import { getDocumentbyId } from 'reducers/user';
 import { AppState } from 'store';
@@ -31,6 +32,10 @@ const useStyles = makeStyles({
     },
     pos: {
         marginBottom: 12,
+    },
+    media: {
+        height: 0,
+        paddingTop: '56.25%', // 16:9
     },
 });
 
@@ -73,6 +78,11 @@ function docParser(doc: Document | undefined) {
     }
 
     if (doc.type === "DigitalDriverLicenceCredential") {
+        const obj = doc.vcs?.vc?.credentialSubject;
+        return toFV(obj);
+    }
+
+    if (doc.type === "DigitalDriverLicenceCredentialTrackback") {
         const obj = doc.vcs?.vc?.credentialSubject;
         return toFV(obj);
     }
@@ -123,6 +133,17 @@ function DocumentDetails() {
                                 if (field === 'Id') {
                                     return <></>
                                 }
+                                if (field === 'Image Uri') {
+                                    return <>
+                                        <CardMedia
+                                            className={classes.media}
+                                            image={value}
+                                            title="Photo"
+                                        />
+
+                                    </>
+                                }
+
                                 return (
                                     <>
                                         <Typography className={classes.title} color="textSecondary" gutterBottom>

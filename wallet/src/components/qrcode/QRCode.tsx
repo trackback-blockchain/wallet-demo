@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 
 // @ts-ignore
 import QrReader from 'react-qr-reader'
@@ -10,7 +11,7 @@ import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
 import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
-import { getKeys } from 'reducers/user';
+import { getKeys, loadVCFromIssuer } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
@@ -31,7 +32,7 @@ const MODES_FAILED = 'MODES_FAILED';
 const MODES_PROCESSING = 'MODES_PROCESSING';
 
 function QRCode() {
-
+    const history = useHistory();
     const [mode, setMode] = useState<string>(MODES_QR);
 
     const dispatch = useDispatch();
@@ -60,7 +61,24 @@ function QRCode() {
 
     }, [vcpRequest]);
 
-    const handleScan = async (data: any) => {
+    const toJSON = (data: string) => {
+        try {
+            return JSON.parse(data).vc
+        } catch (error) {
+            return false;
+        }
+    }
+
+    const addVCDocument = (data: string) => {
+        try {
+            dispatch(loadVCFromIssuer(data));
+            history.push("/");
+        } catch (error) {
+
+        }
+    }
+
+    const createVCPRequest = (data: string) => {
 
         const url = (data || '').replaceAll("https://wallet.trackback.dev?r=", "")
 
@@ -68,6 +86,20 @@ function QRCode() {
             setMode(MODES_PROCESSING)
             dispatch(sendVCPRequest({ url }));
         }
+    }
+
+    const handleScan = (data: string) => {
+
+        if (!data) return;
+
+        const dataJSON = toJSON(data);
+
+        if (dataJSON) {
+            addVCDocument(dataJSON)
+        } else {
+            createVCPRequest(data)
+        }
+
     }
 
     const handleError = (err: any) => {
@@ -83,7 +115,6 @@ function QRCode() {
         setMode(MODES_SHARING);
         dispatch(setVCPIsSharing(true));
         dispatch(shareCredentials({ vcs, url: vcpRequest.publishUrl, publicKey: publicKey!, privateKey: privateKey! }));
-
 
     }
 
@@ -123,6 +154,7 @@ function QRCode() {
 
                 <div className="qr-wrapper" >
                     <div className="qr-title">Scan QR code</div>
+
                     <QrReader
                         delay={300}
                         onError={handleError}

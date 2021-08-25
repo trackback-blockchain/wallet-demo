@@ -41,6 +41,17 @@ export const register = createAsyncThunk(
     }
 )
 
+
+export const loadVCFromIssuer = createAsyncThunk(
+    'users/loadVC',
+    async (url: string) => {
+        const response = await client.post(url, {});
+        return response;
+    }
+)
+
+
+
 export const userSlice = createSlice({
     name: 'user',
     initialState: initState,
@@ -54,6 +65,11 @@ export const userSlice = createSlice({
 
             state.password = password;
         },
+
+        addVC: (state, action) => {
+            const documents = state.documents || []
+            state.documents = [...documents, { id: documents.length + 1, ...action.payload.vc }]
+        }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -63,13 +79,23 @@ export const userSlice = createSlice({
                 state.documents = [...action.payload.vcs]
                 state.publicKey = action.payload.publicKey;
                 state.privateKey = action.payload.privateKey;
-                 
+
                 reactLocalStorage.setObject(IDENTIFIER, { ...state });
+            }).addCase(loadVCFromIssuer.fulfilled, (state, action) => {
+
+                if (!action.payload.vc || Object.keys(action.payload.vc).length === 0) {
+                    return
+                }
+
+                const documents = state.documents || []
+                state.documents = [...documents, { id: documents.length + 1, ...action.payload.vc }]
+                reactLocalStorage.setObject(IDENTIFIER, { ...state });
+
             })
     },
 });
 
-export const { updateUserData } = userSlice.actions;
+export const { updateUserData, addVC } = userSlice.actions;
 export const isLoggedIn = (state: AppState) => state.user.email.length > 0 && !!state.user.password;
 export const getUser = (state: AppState) => state.user;
 export const getDocuments = (state: AppState) => state.user.documents;

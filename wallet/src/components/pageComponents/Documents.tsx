@@ -4,7 +4,7 @@ import { ROUTE_VC } from '../../constants/';
 import { useHistory } from 'react-router';
 import { DocumentsProps, Document } from 'types';
 
-import { ReactComponent as Passsport } from '../resources/passport.svg';
+import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
 
 type parms = {
@@ -30,7 +30,7 @@ function DocumentContainer({ id, name, department, onClick: onclick }: parms) {
             `} onClick={onClick}>
 
             <div css={css``}>
-                <Passsport width="46" height="46" />
+                <FiberManualRecordIcon width="46" height="46" />
 
             </div>
 
