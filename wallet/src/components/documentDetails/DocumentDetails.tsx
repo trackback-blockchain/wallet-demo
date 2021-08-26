@@ -133,8 +133,14 @@ function DocumentDetails() {
                                 if (field === 'Id') {
                                     return <></>
                                 }
+                                if (field === 'Image Hash') {
+                                    return <></>
+                                }
                                 if (field === 'Image Uri') {
                                     return <>
+                                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                                            Photo
+                                        </Typography>
                                         <CardMedia
                                             className={classes.media}
                                             image={value}

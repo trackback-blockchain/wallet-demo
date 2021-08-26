@@ -121,32 +121,34 @@ function ShareDetails({ accept, decline }: Props) {
                 </div>
 
             </div>
+            <div className="page-container">
+                <Card className={classes.root}>
+                    <CardContent>
 
-            <Card className={classes.root}>
-                <CardContent>
+                        {keys.map((key) => {
 
-                    {keys.map((key) => {
+                            const isRequired = required.includes(key);
 
-                        const isRequired = required.includes(key);
+                            const vc = doc?.vcs.partialVCS.find((vc) => {
+                                if (type === "DigitalPassportCredential") {
+                                    return !!vc?.credentialSubject?.passport?.traveller[key];
+                                }
+                                if (type === "DigitalDriverLicenceCredential") {
+                                    return !!vc?.credentialSubject[key];
+                                }
+                                if (type === "DigitalDriverLicenceCredentialTrackback") {
+                                    return !!vc?.credentialSubject[key];
+                                }
+                                return false;
+                            })
+                            if (!vc) return <div key={key}></div>
 
-                        const vc = doc?.vcs.partialVCS.find((vc) => {
-                            if (type === "DigitalPassportCredential") {
-                                return !!vc?.credentialSubject?.passport?.traveller[key];
-                            }
-                            if (type === "DigitalDriverLicenceCredential") {
-                                return !!vc?.credentialSubject[key];
-                            }
-                            if (type === "DigitalDriverLicenceCredentialTrackback") {
-                                return !!vc?.credentialSubject[key];
-                            }
-                            return false;
-                        })
-                        if (!vc) return <div key={key}></div>
+                            if (key === "imageHash") return <></>
+                            const name = key === "imageUri" ? "photo" : key
 
-                        return (<div key={key} >
-                            <Typography className={classes.title} gutterBottom >
+                            return (<Typography className={classes.title} gutterBottom key={key} >
 
-                                {camelCaseToLetter(key)}
+                                {camelCaseToLetter(name)}
 
 
                                 {!isRequired && <Switch
@@ -162,12 +164,13 @@ function ShareDetails({ accept, decline }: Props) {
                                 />}
 
                             </Typography>
-                        </div>)
+                            )
 
-                    })}
+                        })}
 
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </div>
 
             <div className="button-container">
                 <Button className="button-access" onClick={onAcceptClick}>
