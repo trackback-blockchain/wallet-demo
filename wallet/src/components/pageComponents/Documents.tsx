@@ -4,7 +4,8 @@ import { ROUTE_VC } from '../../constants/';
 import { useHistory } from 'react-router';
 import { DocumentsProps, Document } from 'types';
 
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons'
 
 
 type parms = {
@@ -29,9 +30,14 @@ function DocumentContainer({ id, name, department, onClick: onclick }: parms) {
 
             `} onClick={onClick}>
 
-            <div css={css``}>
-                <FiberManualRecordIcon width="46" height="46" />
-
+            <div css={css`width: 46px;
+height: 46px;
+// background: #DEC058;
+// opacity: 0.2;
+border-radius: 8px;
+display: flex;
+align-items: center;`}>
+                <FontAwesomeIcon icon={faAddressCard} size="3x"  color="#DEC058"/>
             </div>
 
             <div css={css`

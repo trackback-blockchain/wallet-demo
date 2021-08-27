@@ -10,7 +10,7 @@ import QrReader from 'react-qr-reader'
 import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
-import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
+import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing, setVcpRequest } from 'reducers/app';
 import { getKeys, loadVCFromIssuer } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
@@ -118,14 +118,20 @@ function QRCode() {
 
     }
 
-    const decline = () => {
+    const qrMode = () => {
+
+        dispatch(setVCPIsSharing(false));
+        dispatch(setVcpRequest(null));
         setMode(MODES_QR);
     }
 
-    const sharingSuccess = () => {
-        setMode(MODES_QR)
+    const decline = () => {
+        qrMode();
     }
 
+    const sharingSuccess = () => {
+        qrMode()
+    }
 
     if (mode === MODES_QUESTION) {
         return <ShareDetails decline={decline} accept={shareAccess} />
