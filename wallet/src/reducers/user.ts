@@ -67,8 +67,13 @@ export const userSlice = createSlice({
         },
 
         addVC: (state, action) => {
-            const documents = state.documents || []
-            state.documents = [...documents, { id: documents.length + 1, ...action.payload.vc }]
+            const vc = action.payload.vc;
+
+            const documents = (state.documents || []).filter((doc) => {
+                return doc.type !== vc.type;
+            });
+            
+            state.documents = [...documents, { id: documents.length + 1, ...vc }]
         }
     },
     extraReducers: (builder) => {
@@ -86,9 +91,14 @@ export const userSlice = createSlice({
                 if (!action.payload.vc || Object.keys(action.payload.vc).length === 0) {
                     return
                 }
+                const vc = action.payload.vc;
+                
+                const documents = (state.documents || []).filter((doc) => {
+                    return doc.type !== vc.type;
+                });
+                
+                state.documents = [...documents, { id: documents.length + 1, ...vc }]
 
-                const documents = state.documents || []
-                state.documents = [...documents, { id: documents.length + 1, ...action.payload.vc }]
                 reactLocalStorage.setObject(IDENTIFIER, { ...state });
 
             })
