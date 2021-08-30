@@ -11,7 +11,7 @@ import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
 import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing, setVcpRequest } from 'reducers/app';
-import { getKeys, loadVCFromIssuer, setVerificationFaild } from 'reducers/user';
+import { getDocumentbyType, getKeys, loadVCFromIssuer, setVerificationFaild } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
@@ -19,6 +19,7 @@ import ShareDetailsFailed from 'components/shareDetails/ShareDetailsFailed';
 import GenerateVCP from 'components/shareDetails/GenerateVCP';
 
 import './qrcode.scss';
+import { AppState } from 'store';
 
 function validateUrl(value: string) {
     return /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)?/gi.test(value);
@@ -40,6 +41,9 @@ function QRCode() {
     const sharingVCP = useSelector(getSharingVCP);
     const vcpRequest = useSelector(getVcpRequest);
 
+    const type = vcpRequest?.schema?.vc;
+    const doc = useSelector((state: AppState) => getDocumentbyType(state, type));
+
     const { publicKey, privateKey } = useSelector(getKeys);
 
     useEffect(() => {
@@ -55,12 +59,17 @@ function QRCode() {
     }, [sharingVCP, mode, dispatch, vcpRequest]);
 
     useEffect(() => {
-
         if (vcpRequest) {
-            setMode(MODES_QUESTION)
+            if (!doc) {
+                setMode(MODES_QR);
+                dispatch(setVCPIsSharing(false));
+                dispatch(setVcpRequest(null));
+            } else {
+                setMode(MODES_QUESTION);
+            }
         }
 
-    }, [vcpRequest]);
+    }, [vcpRequest, doc, dispatch]);
 
     const toJSON = (data: string) => {
         try {
