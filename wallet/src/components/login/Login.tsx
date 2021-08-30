@@ -16,6 +16,7 @@ import Button from 'components/inputs/Button';
 
 import TextField from '../inputs/TextField';
 import { ROUTE_ROOT } from '../../constants';
+import { validateEmail } from '../../utils/validator';
 
 import './login.scss';
 
@@ -29,6 +30,7 @@ function Login() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
+    const [validEmail, setValidEmail] = useState(true);
 
 
     const handleEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,18 +42,20 @@ function Login() {
 
     const handleLogin = async () => {
 
-        if (email.length === 0 || password.length === 0) {
+        if (email.length === 0) {
             return;
         }
-        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        
-        if (!pattern.test(email)) {
-            console.log("*")
+
+        if (!validateEmail(email)) {
+            setValidEmail(false);
             return;
-        
-        } else {
-            console.log("INVALID")
         }
+
+        if (password.length === 0) {
+            return;
+        }
+
+        setValidEmail(true);
 
         const hash = CryptoJS.SHA256(password);
 
@@ -86,13 +90,13 @@ function Login() {
                 `}>
 
 
-                    <TextField label="Email address" value={email} onChange={handleEmail} />
+                    <TextField label="Email address" value={email} onChange={handleEmail} error={!validEmail} />
 
                     <TextField label="Password" type="password" value={password} onChange={handlePassword} />
 
 
                 </div>
-                
+
                 <Button className="button-continue" onClick={handleLogin}>
                     Login
                 </Button>

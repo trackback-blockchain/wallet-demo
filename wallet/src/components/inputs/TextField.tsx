@@ -19,11 +19,11 @@ const BootstrapInput = withStyles((theme) => ({
         },
         '& .MuiInputBase-Input': {
             color: '#000',
-          },
+        },
     },
 
     input: {
-        color:'#000',
+        color: '#000',
         caretColor: '#000',
         borderRadius: 4,
         position: 'relative',
@@ -80,10 +80,11 @@ type Props = {
     label: string;
     type?: string | undefined;
     value?: string;
+    error?: boolean;
     onChange?: (event: any) => void
 }
 
-export default function CustomizedInputs({ label, type = "input", value, onChange }: Props) {
+export default function CustomizedInputs({ label, type = "input", value, error, onChange }: Props) {
     const classes = useStyles();
 
     return (
@@ -100,10 +101,11 @@ export default function CustomizedInputs({ label, type = "input", value, onChang
             line-height: 20px;
             
             `}
+                error={error}
             >
                 {label}
             </InputLabel>
-            <BootstrapInput placeholder={label} id={label.replaceAll(' ','')} type={type} value={value} onChange={onChange} />
+            <BootstrapInput placeholder={label} id={label.replaceAll(' ', '')} type={type} value={value} onChange={onChange} />
         </FormControl>
     )
 }

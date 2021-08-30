@@ -21,6 +21,7 @@ import { ROUTE_SUCCESS } from '../../constants';
 import { css } from '@emotion/react';
 import './signup.scss'
 import Loading from './Loading';
+import { validateEmail } from 'utils/validator';
 
 
 function SignUp() {
@@ -33,6 +34,8 @@ function SignUp() {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('')
+    const [validEmail, setValidEmail] = useState(true);
+
 
     const handleName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
@@ -49,9 +52,19 @@ function SignUp() {
 
 
     const handleRegister = async () => {
-        if (email.length === 0 || password.length === 0) {
+        if (email.length === 0) {
             return;
         }
+
+        if (!validateEmail(email)) {
+            setValidEmail(false);
+            return;
+        }
+        
+        if (password.length === 0) {
+            return;
+        }
+        setValidEmail(true);
 
         const hash = CryptoJS.SHA256(password);
         setMode('loading')
@@ -98,7 +111,7 @@ function SignUp() {
                     </div>
 
 
-                    <TextField label="Email address" value={email} onChange={handleEmail} />
+                    <TextField label="Email address" value={email} onChange={handleEmail} error={!validEmail} />
 
                     <TextField label="Password" type="password" value={password} onChange={handlePassword} />
 
