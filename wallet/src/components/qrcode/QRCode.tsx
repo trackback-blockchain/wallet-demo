@@ -11,7 +11,7 @@ import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
 import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing, setVcpRequest } from 'reducers/app';
-import { getKeys, loadVCFromIssuer } from 'reducers/user';
+import { getKeys, loadVCFromIssuer, setVerificationFaild } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
@@ -48,10 +48,11 @@ function QRCode() {
             setMode(MODES_END)
         }
         if (sharingVCP === 'rejected' && mode === MODES_SHARING) {
+            dispatch(setVerificationFaild(vcpRequest))
             setMode(MODES_FAILED)
         }
 
-    }, [sharingVCP, mode]);
+    }, [sharingVCP, mode, dispatch, vcpRequest]);
 
     useEffect(() => {
 
