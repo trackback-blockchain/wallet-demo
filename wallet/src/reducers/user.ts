@@ -72,8 +72,30 @@ export const userSlice = createSlice({
             const documents = (state.documents || []).filter((doc) => {
                 return doc.type !== vc.type;
             });
-            
+
             state.documents = [...documents, { id: documents.length + 1, ...vc }]
+        },
+        setVerificationFaild: (state, action) => {
+            console.log(action.payload)
+         
+            const doc = (state.documents || []).find((doc) => {
+                return doc.type === action.payload.schema.vc;
+            });
+
+            const documents = (state.documents || []).filter((doc) => {
+                return doc.type !== action.payload.schema.vc;
+            });
+
+            console.log(doc)
+
+            if (!doc) return;
+
+            doc.verificationFailed = true;
+
+            state.documents = [...(documents || []), doc]
+
+            reactLocalStorage.setObject(IDENTIFIER, { ...state });
+
         }
     },
     extraReducers: (builder) => {
@@ -92,11 +114,11 @@ export const userSlice = createSlice({
                     return
                 }
                 const vc = action.payload.vc;
-                
+
                 const documents = (state.documents || []).filter((doc) => {
                     return doc.type !== vc.type;
                 });
-                
+
                 state.documents = [...documents, { id: documents.length + 1, ...vc }]
 
                 reactLocalStorage.setObject(IDENTIFIER, { ...state });
@@ -105,7 +127,7 @@ export const userSlice = createSlice({
     },
 });
 
-export const { updateUserData, addVC } = userSlice.actions;
+export const { updateUserData, addVC, setVerificationFaild } = userSlice.actions;
 export const isLoggedIn = (state: AppState) => state.user.email.length > 0 && !!state.user.password;
 export const getUser = (state: AppState) => state.user;
 export const getDocuments = (state: AppState) => state.user.documents;

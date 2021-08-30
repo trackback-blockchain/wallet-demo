@@ -30,10 +30,7 @@ function ShareDetailsFailed({ accept }: Props) {
 
                 </div>
 
-                <h5>Something went wrong</h5>
-                <h6 className="sub">
-                    Credentials not verified
-                </h6>
+                <h5>Credentials not verified</h5>
 
                 <Button className="button-getstarted" onClick={accept}>
                     Continue

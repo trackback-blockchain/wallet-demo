@@ -43,6 +43,7 @@ export type Document = {
     department: string;
     vcs: VCResponse;
     didUri?: string;
+    verificationFailed?:boolean | undefined;
 }
 
 export type DocumentsProps = {

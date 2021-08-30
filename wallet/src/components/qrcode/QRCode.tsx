@@ -10,8 +10,8 @@ import QrReader from 'react-qr-reader'
 import Tabs from 'components/pageComponents/Tabs';
 import ShareDetails from 'components/shareDetails/ShareDetails';
 
-import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing } from 'reducers/app';
-import { getKeys, loadVCFromIssuer } from 'reducers/user';
+import { sendVCPRequest, getVcpRequest, getSharingVCP, shareCredentials, setVCPIsSharing, setVcpRequest } from 'reducers/app';
+import { getKeys, loadVCFromIssuer, setVerificationFaild } from 'reducers/user';
 
 import SharingAccess from 'components/shareDetails/SharingAccess';
 import ShareDetailsSuccess from 'components/shareDetails/ShareDetailsSuccess';
@@ -48,10 +48,11 @@ function QRCode() {
             setMode(MODES_END)
         }
         if (sharingVCP === 'rejected' && mode === MODES_SHARING) {
+            dispatch(setVerificationFaild(vcpRequest))
             setMode(MODES_FAILED)
         }
 
-    }, [sharingVCP, mode]);
+    }, [sharingVCP, mode, dispatch, vcpRequest]);
 
     useEffect(() => {
 
@@ -118,14 +119,20 @@ function QRCode() {
 
     }
 
-    const decline = () => {
+    const qrMode = () => {
+
+        dispatch(setVCPIsSharing(false));
+        dispatch(setVcpRequest(null));
         setMode(MODES_QR);
     }
 
-    const sharingSuccess = () => {
-        setMode(MODES_QR)
+    const decline = () => {
+        qrMode();
     }
 
+    const sharingSuccess = () => {
+        qrMode()
+    }
 
     if (mode === MODES_QUESTION) {
         return <ShareDetails decline={decline} accept={shareAccess} />

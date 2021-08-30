@@ -4,14 +4,15 @@ import { ROUTE_VC } from '../../constants/';
 import { useHistory } from 'react-router';
 import { DocumentsProps, Document } from 'types';
 
-import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAddressCard } from '@fortawesome/free-solid-svg-icons'
 
 
 type parms = {
     onClick: (id: string) => void;
 } & Document
 
-function DocumentContainer({ id, name, department, onClick: onclick }: parms) {
+function DocumentContainer({ id, name, department, verificationFailed, onClick: onclick }: parms) {
 
     const onClick = () => {
         onclick(id);
@@ -19,19 +20,27 @@ function DocumentContainer({ id, name, department, onClick: onclick }: parms) {
 
     return (
         <div key={id} css={css`
-            background: #FFFFFF;
+            // background: #FFFFFF;
+            background:${verificationFailed ? "#f5f5f5;" :"#FFFFFF;"}
             box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.06);
             border-radius: 8px;
             height: 94px;
             display:flex;
             padding:24px;
             margin-top:10px;
+            border:${verificationFailed ? "1px solid #c62828;" :"none;"}
 
             `} onClick={onClick}>
 
-            <div css={css``}>
-                <FiberManualRecordIcon width="46" height="46" />
-
+            <div css={css`width: 46px;
+                        height: 46px;
+                        // background: #DEC058;
+                        // opacity: 0.2;
+                        border-radius: 8px;
+                        display: flex;
+                        align-items: center;`
+}>
+                <FontAwesomeIcon icon={faAddressCard} size="3x"  color="#DEC058"/>
             </div>
 
             <div css={css`

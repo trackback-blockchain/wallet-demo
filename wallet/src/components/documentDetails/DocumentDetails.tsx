@@ -30,6 +30,11 @@ const useStyles = makeStyles({
         marginTop: '15px',
         fontSize: 14,
     },
+    error: {
+        marginTop: '15px',
+        fontSize: 14,
+        color:'#b71c1c'
+    },
     pos: {
         marginBottom: 12,
     },
@@ -167,6 +172,10 @@ function DocumentDetails() {
                         <Typography className={classes.title} color="textSecondary" gutterBottom>
                             {doc?.didUri}
                         </Typography>
+
+                        {doc?.verificationFailed && <Typography className={classes.error} color="textSecondary" gutterBottom>
+                            Verification Failed
+                        </Typography>}
 
                     </CardContent>
                 </Card>
