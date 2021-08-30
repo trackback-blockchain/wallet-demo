@@ -110,12 +110,12 @@ class TrakBackAgent {
     async addDidToChain(account, didDocument, did_uri) {
 
         var binaryArray = str2ab(JSON.stringify(didDocument))
-        var p = Array.from(new Uint8Array(binaryArray))
+        var didDoc = Array.from(new Uint8Array(binaryArray))
 
         const palletRpc = "didModule";
         const callable = "insertDidDocument";
 
-        const inputParams = [p, did_uri];
+        const inputParams = [didDoc, did_uri];
         const paramFields = [true, true];
 
         const transformed = this.transformParams(paramFields, inputParams);
@@ -125,14 +125,16 @@ class TrakBackAgent {
     }
 
     async save(account, palletRpc, callable, transformed) {
-
+        const nonce = await this.api.rpc.system.accountNextIndex(account.address);
         const txExecute = this.api.tx[palletRpc][callable](...transformed);
 
         return await new Promise((resolve, reject) => {
 
-            txExecute.signAndSend(account, (result) => {
+            txExecute.signAndSend(account, {nonce}, (result) => {
 
                 console.log(`Current status is ${result.status}`);
+                console.log(`Current nonce is ${nonce}`);
+
 
                 if (result.status.isInBlock) {
                     console.log(`Transaction included at blockHash ${result.status.asInBlock}`);
