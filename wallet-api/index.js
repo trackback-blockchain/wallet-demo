@@ -142,7 +142,6 @@ console.log('WALLET AGENT SERVER STARTING');
 
 process.on('uncaughtException', function (exception) {
     console.log(exception);
-    process.exit(1);
 });
 
 process.on('SIGTERM', () => {
