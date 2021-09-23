@@ -79,6 +79,11 @@ app.post('/api/register', async (req, res) => {
     console.log('Test Passport VC:', JSON.stringify(passportVCS))
     console.log('Test Licence VC:', JSON.stringify(driverLicence))
 
+    await TrackBackAgent.disconnect().catch((error) => {
+        console.log(error);
+    });
+
+
     res.status(200).json({
         publicKey,
         privateKey,

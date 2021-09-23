@@ -61,6 +61,12 @@ class TrakBackAgent {
 
     }
 
+    async disconnect(){
+        if(this.api){
+            this.api.disconnect();
+        }
+    }
+
     transformParams(paramFields, inputParams, opts = { emptyAsNull: true }) {
         const paramVal = inputParams.map(inputParam => {
             if (typeof inputParam === 'object' && inputParam !== null && typeof inputParam.value === 'string') {
