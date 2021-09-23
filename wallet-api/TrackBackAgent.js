@@ -131,6 +131,11 @@ class TrakBackAgent {
     }
 
     async save(account, palletRpc, callable, transformed) {
+
+        if(!this.api.isConnected) {
+            await this.connect();
+        }
+
         const nonce = await this.api.rpc.system.accountNextIndex(account.address);
         const txExecute = this.api.tx[palletRpc][callable](...transformed);
 
