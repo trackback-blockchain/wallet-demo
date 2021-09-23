@@ -13,5 +13,5 @@ RUN yarn global add pm2
 
 COPY . .
 
-RUN pm2-runtime start index.js
+CMD ["pm2-runtime", "index.js"]
 EXPOSE 80
