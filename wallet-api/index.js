@@ -39,7 +39,10 @@ app.post('/api/register', async (req, res) => {
     const DATE_FORMAT = "YYYY-MM-DDThh:mm:ss"
     const DATE_FORMAT_SIMPLE = "YYYY-MM-DD"
 
-    await TrackBackAgent.connect();
+    await TrackBackAgent.connect().catch((error) => {
+        console.log('Connection Error')
+        console.log(error);
+    });
 
     // Create a keyring instance
     const keyring = new Keyring({ type: 'sr25519' });

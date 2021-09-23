@@ -3,13 +3,15 @@ RUN apk add --no-cache git
 RUN apk add --no-cache python2
 RUN apk add --no-cache make
 
+
 WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 
 RUN yarn install
+RUN yarn global add pm2
 
 COPY . .
 
-CMD ["node", "index.js"]
+RUN pm2-runtime start index.js
 EXPOSE 80
