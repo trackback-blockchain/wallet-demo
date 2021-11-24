@@ -6,7 +6,7 @@ Directories
 
 ```bash
 
-├── nginx <--- Proxy for docker compose to
+├── nginx <--- Proxy for docker compose start point
 ├── terraform <--- Terraform scripts
 ├── wallet <--- React wallet app
 └── wallet-api <--- Api 
